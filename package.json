@@ -5,8 +5,14 @@
   "main": "src/server/index.js",
   "author": "Truwix",
   "scripts": {
-    "start": "cross-env BABEL_DISABLE_CACHE=1 NODE_ENV=development nodemon index.js",
-    "dev": "nodemon --exec babel-node src/server/index.js"
+    "start": "cross-env BABEL_DISABLE_CACHE=1 NODE_ENV=development nodemon skywall-api.js",
+    "build": "npm run build:server",
+    "build:server": "cross-env NODE_ENV=production babel --delete-dir-on-start --out-dir dist --copy-files --ignore \\\\\\\"**/__tests__/**,**/__mocks__/**\\\\\\\" --no-copy-ignored src",
+    "start:prod": "cross-env NODE_ENV=production node skywall-api.js",
+    "build:all": "npm run clean && npm run build:server",
+    "clean": "rimraf dist",
+    "slate": "rimraf node_modules && npm install",
+    "lint": "eslint server"
   },
   "dependencies": {
     "body-parser": "^1.20.3",
@@ -23,6 +29,7 @@
     "@babel/core": "^7.26.9",
     "@babel/node": "^7.26.0",
     "@babel/preset-env": "^7.26.9",
+    "cross-env": "^7.0.3",
     "nodemon": "^3.1.9"
   },
   "engines": {

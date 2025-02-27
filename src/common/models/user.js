@@ -3,6 +3,24 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
+    name: {
+        type: String
+    },
+    email: {
+        type: String
+    },
+    phone:{
+        type: Number
+    },
+    password: {
+        type: String
+    },
+    address:{
+        type: String
+    },
+    role: {
+        type: String
+    },
     is_deleted: {
         type: Boolean,
         default: false 
