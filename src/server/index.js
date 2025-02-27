@@ -12,9 +12,9 @@ const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 
 // Routes
-app.use('/api/users', userRoutes);
-app.use('/api/products', productRoutes);
-app.use('/api/orders', orderRoutes);
+app.use('/api/v1/user', userRoutes);
+app.use('/api/v1/product', productRoutes);
+app.use('/api/v1/order', orderRoutes);
 
 // Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/skywall', {
