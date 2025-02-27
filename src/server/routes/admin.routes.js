@@ -1,21 +1,69 @@
 
 import _ from 'lodash';
 import {Router} from 'express';
-
-import {
-    addNewProductHandler,
-    deleteProductHandler,
-    getProductDetailsHandler,
-    getProductListHandler,
-    updateProductDetailsHandler
-} from '../../common/lib/product/productHandler';
+import {    
+    adminLoginHandler,
+    adminSignupHandler,
+    deleteAdminHandler,
+    addNewAdminHandler,
+    getAdminDetailsHandler,
+    getAdminListHandler,
+    updateAdminDetailsHandler
+} from '../../common/lib/admin/adminHandler';
 import responseStatus from "../../common/constants/responseStatus.json";
 import responseData from "../../common/constants/responseData.json";
 import protectRoutes from "../../common/util/protectRoutes";
 
 const router = new Router();
 
-router.route('/list').post(protectRoutes.verifyAdmin,async (req, res) => {
+router.route('/signup').post(async (req, res) => {
+    try {
+        if (!_.isEmpty(req.body)) {
+            const outputResult = await adminSignupHandler(req.body);
+            res.status(responseStatus.STATUS_SUCCESS_OK);
+            res.send({
+                status: responseData.SUCCESS,
+                data: {
+                    admin: outputResult.admin,
+                    token: outputResult.token
+                }
+            });
+        } else {
+            throw 'No request body sent';
+        }
+    } catch (err) {
+        console.log(err);
+        res.status(responseStatus.INTERNAL_SERVER_ERROR);
+        res.send({
+            status: responseData.ERROR,
+            data: { message: err.message }
+        });
+    }
+});
+
+
+router.route("/login").post(async (req, res) => {
+    try {
+        console.log(req.body);
+      if (!_.isEmpty(req.body)) {
+        const adminData = await adminLoginHandler(req.body);
+        res.status(responseStatus.STATUS_SUCCESS_OK).json({
+          status: responseData.SUCCESS,
+          data: { admin: adminData },
+        });
+      } else {
+        throw "No credentials provided";
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(responseStatus.INTERNAL_SERVER_ERROR).json({
+        status: responseData.ERROR,
+        data: { message: err },
+      });
+    }
+  });
+
+router.route('/list').post(protectRoutes.authenticateToken,async (req, res) => {
     try {
       let filter = {};
       filter.query = {};
@@ -35,13 +83,13 @@ router.route('/list').post(protectRoutes.verifyAdmin,async (req, res) => {
   
       filter.query = { ...filter.query };
   
-      const outputResult = await getProductListHandler(filter);
+      const outputResult = await getAdminListHandler(filter);
       res.status(responseStatus.STATUS_SUCCESS_OK);
       res.send({
         status: responseData.SUCCESS,
         data: {
-          productList: outputResult.list ? outputResult.list : [],
-          productCount: outputResult.count ? outputResult.count : 0,
+          adminList: outputResult.list ? outputResult.list : [],
+          adminCount: outputResult.count ? outputResult.count : 0,
         },
       });
     } catch (err) {
@@ -55,15 +103,15 @@ router.route('/list').post(protectRoutes.verifyAdmin,async (req, res) => {
   });
 
 
-router.route('/new').post(protectRoutes.verifyAdmin,async (req, res) => {
+router.route('/new').post(async (req, res) => {
     try {
        if (!_.isEmpty(req.body)) {
-            const outputResult = await addNewProductHandler(req.body.product);
+            const outputResult = await addNewAdminHandler(req.body.admin);
             res.status(responseStatus.STATUS_SUCCESS_OK);
             res.send({
                 status: responseData.SUCCESS,
                 data: {
-                    product: outputResult ? outputResult : {}
+                    admin: outputResult ? outputResult : {}
                 }
             });
         } else {
@@ -79,15 +127,15 @@ router.route('/new').post(protectRoutes.verifyAdmin,async (req, res) => {
     }
 });
 
-router.route('/:id').get(protectRoutes.verifyAdmin,async (req, res) => {
+router.route('/:id').get(async (req, res) => {
     try {
         if (req.params.id) {
-            const gotProduct = await getProductDetailsHandler(req.params);
+            const gotAdmin = await getAdminDetailsHandler(req.params);
             res.status(responseStatus.STATUS_SUCCESS_OK);
             res.send({
                 status: responseData.SUCCESS,
                 data: {
-                    product: gotProduct ? gotProduct : {}
+                    admin: gotAdmin ? gotAdmin : {}
                 }
             });
         } else {
@@ -103,19 +151,19 @@ router.route('/:id').get(protectRoutes.verifyAdmin,async (req, res) => {
     }
 });
 
-router.route('/:id/update').post(protectRoutes.verifyAdmin,async (req, res) => {
+router.route('/:id/update').post( async (req, res) => {
     try {
-        if (!_.isEmpty(req.params.id) && !_.isEmpty(req.body) && !_.isEmpty(req.body.product)) {
+        if (!_.isEmpty(req.params.id) && !_.isEmpty(req.body) && !_.isEmpty(req.body.admin)) {
             let input = {
                 objectId: req.params.id,
-                updateObject: req.body.product
+                updateObject: req.body.admin
             }
-            const updateObjectResult = await updateProductDetailsHandler(input);
+            const updateObjectResult = await updateAdminDetailsHandler(input);
             res.status(responseStatus.STATUS_SUCCESS_OK);
                 res.send({
                     status: responseData.SUCCESS,
                     data: {
-                        product: updateObjectResult ? updateObjectResult : {}
+                        admin: updateObjectResult ? updateObjectResult : {}
                     }
                 });
         } else {
@@ -131,15 +179,15 @@ router.route('/:id/update').post(protectRoutes.verifyAdmin,async (req, res) => {
     }
 });
 
-router.route('/:id/remove').post(protectRoutes.verifyAdmin,async(req, res) => {
+router.route('/:id/remove').post(async(req, res) => {
     try {
         if (req.params.id) {
-            const deletedProduct = await deleteProductHandler(req.params.id);
+            const deletedAdmin = await deleteAdminHandler(req.params.id);
             res.status(responseStatus.STATUS_SUCCESS_OK);
             res.send({
                 status: responseData.SUCCESS,
                 data: {
-                    hasProductDeleted: true
+                    hasAdminDeleted: true
                 }
             });
         } else {

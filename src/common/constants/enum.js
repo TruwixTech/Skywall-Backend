@@ -1,4 +1,7 @@
-export const USER = "user";
-export const PENDING = "pending";
-export const COMPLETED = "completed";
-export const CANCELLED = "cancelled";
+export const USER = "User";
+export const ADMIN = "Admin";
+export const PENDING = "Pending";
+export const COMPLETED = "Completed";
+export const CANCELLED = "Cancelled";
+export const SUPERADMIN = "SuperAdmin";
+export const SUBADMIN = "SubAdmin";
