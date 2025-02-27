@@ -5,6 +5,8 @@ import userRoutes from './routes/user.routes';
 import productRoutes from './routes/product.routes';
 import orderRoutes from './routes/order.routes';
 import adminRoutes from './routes/admin.routes';
+import authRoutes from './routes/auth.routes';
+
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -16,6 +18,7 @@ app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/product', productRoutes);
 app.use('/api/v1/order', orderRoutes);
 app.use('/api/v1/admin', adminRoutes);
+app.use('/api/v1/auth', authRoutes);
 
 // Connect to MongoDB
 mongoose.connect('mongodb://localhost:27017/skywall', {

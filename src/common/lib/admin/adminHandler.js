@@ -34,7 +34,6 @@ export async function adminLoginHandler(input) {
     query: { email: input.email },
   });
   
-  console.log("Admin Password: "+admin.password+" Input Password: "+input.password);
 
   if (!admin) {
     throw new Error("Admin not found");
