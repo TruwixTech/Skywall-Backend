@@ -2,14 +2,14 @@ import userHelper from "../../helpers/user.helper";
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../../util/authUtil";
-import { getUserInfo } from "../../util/utilHelper";
+import { getUserInfo } from "../../util/utilHelper.js";
 import { USER } from "../../constants/enum";
 import _ from "lodash";
 import {
   generateOtpExpireDate,
   generateOtp,
   mailsender,
-} from "../../util/utilHelper";
+} from "../../util/utilHelper.js";
 
 
 
@@ -24,6 +24,7 @@ export async function userSignupHandler(input) {
     name: input.name,
     address: input.address,
     phone: input.phone,
+    password: hashedPassword,
     email: input.email,
     age: input.age,
   };
@@ -41,10 +42,6 @@ export async function userLoginHandler(input) {
   if (input.email) {
     user = await userHelper.getObjectByQuery({
       query: { email: input.email },
-    });
-  } else if (input.phone) {
-    user = await userHelper.getObjectByQuery({
-      query: { phone: input.phone },
     });
   }
 

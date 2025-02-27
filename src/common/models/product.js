@@ -12,6 +12,9 @@ const productSchema = new Schema({
     discount:{
         type:Number
     },
+    warranty:{
+        type:Number
+    },
     image:{
         type:String
     },
