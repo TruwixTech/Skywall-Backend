@@ -44,7 +44,6 @@ router.route('/signup').post(async (req, res) => {
 
 router.route("/login").post(async (req, res) => {
     try {
-        console.log(req.body);
       if (!_.isEmpty(req.body)) {
         const adminData = await adminLoginHandler(req.body);
         res.status(responseStatus.STATUS_SUCCESS_OK).json({
