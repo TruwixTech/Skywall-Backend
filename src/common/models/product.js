@@ -2,6 +2,12 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
+const specificationSchema = new Schema({
+    title: { type: String, required: true },
+    key: { type: String, required: true },
+    value: { type: String, required: true },
+  });
+
 const productSchema = new Schema({
     name:{
         type:String
@@ -9,14 +15,29 @@ const productSchema = new Schema({
     price:{
         type:Number
     },
-    discount:{
+    discount_percentage:{
         type:Number
     },
-    warranty:{
+    new_price:{
         type:Number
+    },
+    stock:{
+        type:Number
+    },
+    warranty_years:{
+        type:Number
+    },
+    highlights:{
+        type:[String],
+        default:[]
+    },
+    specificationSchema:{
+        type:[specificationSchema],
+        default:[]
     },
     image:{
-        type:String
+        type:[String],
+        default:[]
     },
     description:{
         type:String
