@@ -22,7 +22,7 @@ app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1/auth', authRoutes);
 
 // Connect to MongoDB
-mongoose.connect(config.mongoURI, {
+mongoose.connect(config.mongoURL, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => {
