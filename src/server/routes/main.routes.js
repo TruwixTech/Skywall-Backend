@@ -1,7 +1,7 @@
 import { Router } from "express";
 import serverConfig from "../config";
 import appConfig from "../../common/constants/appConfig.json";
-import { version } from "../../../package.json";
+import { version,name } from "../../../package.json";
 // import axios from "axios";
 import { setServerError, setSuccess } from "../../common/util/responseHelper";
 const router = new Router();
@@ -13,8 +13,7 @@ router.route("/").get(async (req, res) => {
   setSuccess(res, {
     stage: serverConfig.stage,
     version: `${stageFirstLetter}.${version}`,
-    host: `${process.env.HOSTNAME}`,
-    // ip
+    host: name,
   });
 });
 
