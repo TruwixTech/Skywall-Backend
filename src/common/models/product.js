@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const specificationSchema = new Schema({
+    title: { type: String, required: true },
     key: { type: String, required: true },
     value: { type: String, required: true },
   });
