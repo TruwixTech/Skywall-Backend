@@ -13,7 +13,8 @@ import {
 import responseStatus from "../../common/constants/responseStatus.json";
 import responseData from "../../common/constants/responseData.json";
 import protectRoutes from "../../common/util/protectRoutes";
-const { storage } = require("../../util/cloudinary");
+import { storage } from "../../util/cloudinary.js";
+
 const router = new Router();
 
 const upload = multer({ storage });

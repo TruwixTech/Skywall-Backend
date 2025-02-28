@@ -1,5 +1,6 @@
 import productHelper from "../../helpers/product.helper";
-const cloudinary = require("cloudinary").v2;
+import { v2 as cloudinary } from "cloudinary";
+
 
 export async function addNewProductHandler(input) {
   return await productHelper.addObject(input);
@@ -7,6 +8,8 @@ export async function addNewProductHandler(input) {
 
 export async function addNewProductHandlerV2(input) {
   let imageUrls = [];
+  let price=0;
+
   // Upload images to Cloudinary
   if (input.images && input.images.length > 0) {
     for (const image of input.images) {
