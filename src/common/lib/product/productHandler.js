@@ -6,7 +6,6 @@ export async function addNewProductHandler(input) {
 }
 
 export async function addNewProductHandlerV2(input) {
-  console.log("images here ", input.images);
   let imageUrls = [];
   // Upload images to Cloudinary
   if (input.images && input.images.length > 0) {
@@ -17,10 +16,8 @@ export async function addNewProductHandlerV2(input) {
       imageUrls.push(result.secure_url);
     }
   }
-  console.log("imageUrls : ", imageUrls);
   // Add image URLs to the product input
   input.image = imageUrls;
-  console.log("Last Input", input);
   return await productHelper.addObject(input);
 }
 

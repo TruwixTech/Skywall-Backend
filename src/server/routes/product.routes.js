@@ -92,7 +92,6 @@ router.post("/add-product",upload.fields([{ name: "img", maxCount: 5 }]), async 
         if (files.img) {
             productData.images = files.img.map(file => ({ path: file.path }));
         }
-        console.log(productData);
         
         const outputResult = await addNewProductHandlerV2(productData);
         res.status(responseStatus.STATUS_SUCCESS_OK).send({
