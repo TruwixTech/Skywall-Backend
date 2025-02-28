@@ -6,6 +6,7 @@ import productRoutes from './routes/product.routes';
 import orderRoutes from './routes/order.routes';
 import adminRoutes from './routes/admin.routes';
 import authRoutes from './routes/auth.routes';
+import mainRoutes from './routes/main.routes';
 import config from './config';
 
 const app = express();
@@ -15,6 +16,7 @@ const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 
 // Routes
+app.use('/',mainRoutes);
 app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/product', productRoutes);
 app.use('/api/v1/order', orderRoutes);
