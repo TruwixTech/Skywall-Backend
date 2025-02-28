@@ -1,68 +1,20 @@
 
 import _ from 'lodash';
 import {Router} from 'express';
-import {    
-    adminLoginHandler,
-    adminSignupHandler,
-    deleteAdminHandler,
-    addNewAdminHandler,
-    getAdminDetailsHandler,
-    getAdminListHandler,
-    updateAdminDetailsHandler
-} from '../../common/lib/admin/adminHandler';
+
+import {
+    addNewReviewHandler,
+    deleteReviewHandler,
+    getReviewDetailsHandler,
+    getReviewListHandler,
+    updateReviewDetailsHandler
+} from '../../common/lib/review/reviewHandler';
 import responseStatus from "../../common/constants/responseStatus.json";
 import responseData from "../../common/constants/responseData.json";
-import protectRoutes from "../../common/util/protectRoutes";
 
 const router = new Router();
 
-router.route('/signup').post(async (req, res) => {
-    try {
-        if (!_.isEmpty(req.body)) {
-            const outputResult = await adminSignupHandler(req.body);
-            res.status(responseStatus.STATUS_SUCCESS_OK);
-            res.send({
-                status: responseData.SUCCESS,
-                data: {
-                    admin: outputResult.admin,
-                    token: outputResult.token
-                }
-            });
-        } else {
-            throw 'No request body sent';
-        }
-    } catch (err) {
-        console.log(err);
-        res.status(responseStatus.INTERNAL_SERVER_ERROR);
-        res.send({
-            status: responseData.ERROR,
-            data: { message: err.message }
-        });
-    }
-});
-
-
-router.route("/login").post(async (req, res) => {
-    try {
-      if (!_.isEmpty(req.body)) {
-        const adminData = await adminLoginHandler(req.body);
-        res.status(responseStatus.STATUS_SUCCESS_OK).json({
-          status: responseData.SUCCESS,
-          data: { admin: adminData },
-        });
-      } else {
-        throw "No credentials provided";
-      }
-    } catch (err) {
-      console.error(err);
-      res.status(responseStatus.INTERNAL_SERVER_ERROR).json({
-        status: responseData.ERROR,
-        data: { message: err },
-      });
-    }
-  });
-
-router.route('/list').post(protectRoutes.authenticateToken,async (req, res) => {
+router.route('/list').post(async (req, res) => {
     try {
       let filter = {};
       filter.query = {};
@@ -82,13 +34,13 @@ router.route('/list').post(protectRoutes.authenticateToken,async (req, res) => {
   
       filter.query = { ...filter.query };
   
-      const outputResult = await getAdminListHandler(filter);
+      const outputResult = await getReviewListHandler(filter);
       res.status(responseStatus.STATUS_SUCCESS_OK);
       res.send({
         status: responseData.SUCCESS,
         data: {
-          adminList: outputResult.list ? outputResult.list : [],
-          adminCount: outputResult.count ? outputResult.count : 0,
+          reviewList: outputResult.list ? outputResult.list : [],
+          reviewCount: outputResult.count ? outputResult.count : 0,
         },
       });
     } catch (err) {
@@ -105,12 +57,12 @@ router.route('/list').post(protectRoutes.authenticateToken,async (req, res) => {
 router.route('/new').post(async (req, res) => {
     try {
        if (!_.isEmpty(req.body)) {
-            const outputResult = await addNewAdminHandler(req.body.admin);
+            const outputResult = await addNewReviewHandler(req.body.review);
             res.status(responseStatus.STATUS_SUCCESS_OK);
             res.send({
                 status: responseData.SUCCESS,
                 data: {
-                    admin: outputResult ? outputResult : {}
+                    review: outputResult ? outputResult : {}
                 }
             });
         } else {
@@ -129,12 +81,12 @@ router.route('/new').post(async (req, res) => {
 router.route('/:id').get(async (req, res) => {
     try {
         if (req.params.id) {
-            const gotAdmin = await getAdminDetailsHandler(req.params);
+            const gotReview = await getReviewDetailsHandler(req.params);
             res.status(responseStatus.STATUS_SUCCESS_OK);
             res.send({
                 status: responseData.SUCCESS,
                 data: {
-                    admin: gotAdmin ? gotAdmin : {}
+                    review: gotReview ? gotReview : {}
                 }
             });
         } else {
@@ -152,17 +104,17 @@ router.route('/:id').get(async (req, res) => {
 
 router.route('/:id/update').post( async (req, res) => {
     try {
-        if (!_.isEmpty(req.params.id) && !_.isEmpty(req.body) && !_.isEmpty(req.body.admin)) {
+        if (!_.isEmpty(req.params.id) && !_.isEmpty(req.body) && !_.isEmpty(req.body.review)) {
             let input = {
                 objectId: req.params.id,
-                updateObject: req.body.admin
+                updateObject: req.body.review
             }
-            const updateObjectResult = await updateAdminDetailsHandler(input);
+            const updateObjectResult = await updateReviewDetailsHandler(input);
             res.status(responseStatus.STATUS_SUCCESS_OK);
                 res.send({
                     status: responseData.SUCCESS,
                     data: {
-                        admin: updateObjectResult ? updateObjectResult : {}
+                        review: updateObjectResult ? updateObjectResult : {}
                     }
                 });
         } else {
@@ -181,12 +133,12 @@ router.route('/:id/update').post( async (req, res) => {
 router.route('/:id/remove').post(async(req, res) => {
     try {
         if (req.params.id) {
-            const deletedAdmin = await deleteAdminHandler(req.params.id);
+            const deletedReview = await deleteReviewHandler(req.params.id);
             res.status(responseStatus.STATUS_SUCCESS_OK);
             res.send({
                 status: responseData.SUCCESS,
                 data: {
-                    hasAdminDeleted: true
+                    hasReviewDeleted: true
                 }
             });
         } else {
