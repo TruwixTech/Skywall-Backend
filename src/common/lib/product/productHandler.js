@@ -52,8 +52,9 @@ export async function updateWarrantyPriceHandler(productId, warrantyYears) {
   }
 
   const newPrice = product.price + warrantyPricing;
+  const newWarrantyYears = product.warranty_years + warrantyYears;
   product.new_price = newPrice;
-  product.warranty_years = warrantyYears;
+  product.warranty_years = newWarrantyYears;
 
   return await productHelper.updateObject(productId.id, product);
 }

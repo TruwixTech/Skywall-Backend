@@ -29,7 +29,7 @@ const productSchema = new Schema({
     stock:{
         type:Number
     },
-    warranty_years:{
+    warranty_months:{
         type:Number
     },
     highlights:{
