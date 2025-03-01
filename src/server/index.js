@@ -6,7 +6,6 @@ import cors from 'cors';
 import productRoutes from './routes/product.routes';
 import orderRoutes from './routes/order.routes';
 import adminRoutes from './routes/admin.routes';
-import cors from 'cors';
 import authRoutes from './routes/auth.routes';
 import mainRoutes from './routes/main.routes';
 import config from './config';
