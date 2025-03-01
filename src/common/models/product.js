@@ -24,7 +24,7 @@ const productSchema = new Schema({
     warranty_pricing: {
         type: Map,
         of: Number,
-        default: { "1": 1000, "2": 1500, "3": 2000 }
+        default: { "1": 1200, "2": 1500, "3": 2000 }
     },
     stock:{
         type:Number
