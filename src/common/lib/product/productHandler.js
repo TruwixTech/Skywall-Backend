@@ -8,19 +8,36 @@ export async function addNewProductHandler(input) {
 
 function calculateDiscountedPrice(price, discountPercentage) {
   if (price < 0 || discountPercentage < 0 || discountPercentage > 100) {
-      throw new Error("Invalid price or discount percentage");
+    throw new Error("Invalid price or discount percentage");
   }
 
   const discountAmount = (price * discountPercentage) / 100;
   const newPrice = price - discountAmount;
-  
+
   return newPrice.toFixed(2); // Returns price rounded to 2 decimal places
 }
 
 export async function addNewProductHandlerV2(input) {
+  if (typeof input.specificationSchema === "string") {
+    let parsedSpecs = JSON.parse(input.specificationSchema);
+    // Remove empty objects
+    input.specificationSchema = parsedSpecs.filter(
+      spec => spec.title.trim() !== "" && spec.key.trim() !== "" && spec.value.trim() !== ""
+    );
+  }
+
+  if (typeof input.highlights === "string") {
+    input.highlights = JSON.parse(input.highlights);
+  }
+
+  // Add file paths to product data
+  if (input.files.img) {
+    input.images = input.files.img.map(file => ({ path: file.path }));
+  }
+
   let imageUrls = [];
   let new_price = calculateDiscountedPrice(input.price, input.discount_percentage);
-  
+
   // Upload images to Cloudinary
   if (input.images && input.images.length > 0) {
     for (const image of input.images) {
@@ -30,7 +47,7 @@ export async function addNewProductHandlerV2(input) {
       imageUrls.push(result.secure_url);
     }
   }
-  
+
   // Add image URLs to the product input
   input.image = imageUrls;
   if (!isNaN(new_price) && new_price !== null && new_price !== undefined) {

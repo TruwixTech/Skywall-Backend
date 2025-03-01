@@ -8,25 +8,27 @@ const userSchema = new Schema({
         type: String
     },
     email: {
-        type: String
+        type: String,
+        unique: true
     },
-    phone:{
-        type: Number
+    phone: {
+        type: Number,
+        unique: true
     },
     password: {
         type: String
     },
-    address:{
+    address: {
         type: String
     },
     role: {
         type: String,
-        enum:[ADMIN, USER],
+        enum: [ADMIN, USER],
         default: USER
     },
     is_deleted: {
         type: Boolean,
-        default: false 
+        default: false
     },
     created_at: {
         type: Date,

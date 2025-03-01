@@ -22,12 +22,18 @@ export async function userSignupHandler(input) {
   // Prepare user data.
   const userData = {
     name: input.name,
-    address: input.address,
     phone: input.phone,
     password: hashedPassword,
     email: input.email,
-    age: input.age,
   };
+
+  // Check if user with the same email or phone already exists.
+  const existingUser = await userHelper.getObjectByQuery({
+    query: { $or: [{ email: input.email }, { phone: input.phone }] },
+  });
+  if (existingUser) {
+    throw "User with this email or phone already exists"
+  }
 
   const newUser = await userHelper.addObject(userData);
 
@@ -110,7 +116,6 @@ export async function verifyUserOtpHandler(email, otp) {
       selectFrom: {
         name: 1,
         email: 1,
-        role: 1,
         otp: 1,
         otp_expiry: 1,
       },
@@ -157,7 +162,7 @@ export async function getUserByEmailPasswordHandler(input) {
 
     const filters = {
       query: { email: input.email },
-      selectFrom: { name: 1, email: 1, role: 1, password: 1 }, // Include password for comparison
+      selectFrom: { name: 1, email: 1, password: 1 }, // Include password for comparison
     };
 
     const user = await userHelper.getObjectByQuery(filters);
@@ -189,7 +194,7 @@ export async function getUserByEmailHandler(input) {
 
     const filters = {
       query: { email: input.email },
-      selectFrom: { name: 1, email: 1, role: 1 },
+      selectFrom: { name: 1, email: 1},
     };
 
     const user = await userHelper.getObjectByQuery(filters);
