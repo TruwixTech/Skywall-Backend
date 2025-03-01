@@ -17,7 +17,7 @@ import { storage } from "../../util/cloudinary.js";
 
 const router = new Router();
 
-const upload = multer({ storage });
+const upload = multer({ storage, limits: { fileSize: 500 * 1024 * 1024 }});
 
 router.route('/list').post(async (req, res) => {
     try {
