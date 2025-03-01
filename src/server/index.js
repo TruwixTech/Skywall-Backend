@@ -1,20 +1,77 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import bodyParser from 'body-parser';
-import userRoutes from './routes/user.routes';
-import cors from 'cors';
-import productRoutes from './routes/product.routes';
-import orderRoutes from './routes/order.routes';
-import adminRoutes from './routes/admin.routes';
-import authRoutes from './routes/auth.routes';
-import mainRoutes from './routes/main.routes';
-import config from './config';
+import Express from "express";
+// import Raven from 'raven';
+import compression from "compression";
+import mongoose from "mongoose";
+import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
+import chalk from "./chalk";
 
-const app = express();
+import userRoutes from './routes/user.routes.js';
+import productRoutes from './routes/product.routes.js';
+import orderRoutes from './routes/order.routes.js';
+import adminRoutes from './routes/admin.routes.js';
+import authRoutes from './routes/auth.routes.js';
+import mainRoutes from './routes/main.routes.js';
+import couponRoutes from './routes/coupon.routes.js';
+import config from './config.js';
+import http from 'http';
+import swaggerUi from 'swagger-ui-express';
+import swaggerDoc from '../../swagger/swagger-output.json' with { type: 'json' };
+
+const app = Express();
 const port = process.env.PORT || 3000;
+mongoose.Promise = global.Promise;
 
-app.use(bodyParser.json());
-app.use(cors({ origin: '*' }));
+const server = http.createServer(app);
+
+const dbOptions = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  poolSize: 50, // Maintain up to 50 socket connections
+};
+
+// MongoDB Connection
+mongoose.connect(config.mongoURL);
+
+mongoose.set('debug', false);
+
+// Swagger UI generation
+const swaggerOptions = {
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: 'RBAC Docs',
+  customfavIcon: 'https://spyne-test.s3.amazonaws.com/spyne-logo.png',
+};
+
+app.use(compression());
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '100mb', extended: false }));
+app.use(cookieParser());
+app.enable('trust proxy');
+
+app.use('*', (req, res, next) => {
+  const { hostname, originalUrl, protocol, method } = req;
+  console.log(
+    `${
+      method === 'GET' ? chalk.getReq(method) : chalk.postReq(method)
+    }  ${protocol}://${hostname}:${config.PORT}${originalUrl}`
+  );
+  next();
+});
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization, Access-Control-Allow-Credentials'
+  );
+  res.header('Access-Control-Allow-Credentials', 'true');
+  if (req.method === 'OPTIONS') {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
 
 // Routes
 app.use('/', mainRoutes);
@@ -23,18 +80,15 @@ app.use('/api/v1/product', productRoutes);
 app.use('/api/v1/order', orderRoutes);
 app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/coupon', couponRoutes);
 
-// Connect to MongoDB
-mongoose.connect(config.mongoURL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}).then(() => {
-    console.log('Connected to MongoDB');
-}).catch(err => {
-    console.error('Failed to connect to MongoDB', err);
-});
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDoc, swaggerOptions)
+);
 
-// Start the server
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+server.listen(config.PORT, (error) => {
+  console.log(process.env.NODE_ENV);
+  console.log(`Core API is running on port: ${config.PORT}!`);
 });
