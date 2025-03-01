@@ -18,7 +18,7 @@ import { storage } from "../../util/cloudinary.js";
 
 const router = new Router();
 
-const upload = multer({ storage, limits: { fileSize: 500 * 1024 * 1024 }});
+const upload = multer({ storage, limits: { fileSize: 500 * 1024 * 1024 } });
 
 router.route('/list').post(async (req, res) => {
     try {
@@ -111,38 +111,7 @@ router.post("/add-product", protectRoutes.verifyAdmin, upload.fields([{ name: "i
         const files = req.files;
         const productData = req.body;
 
-        if (typeof productData.specificationSchema === "string") {
-            try {
-                let parsedSpecs = JSON.parse(productData.specificationSchema);
-                // Remove empty objects
-                productData.specificationSchema = parsedSpecs.filter(
-                    spec => spec.title.trim() !== "" && spec.key.trim() !== "" && spec.value.trim() !== ""
-                );
-            } catch (error) {
-                return res.status(400).send({
-                    status: "ERROR",
-                    message: "Invalid JSON format in specificationSchema",
-                });
-            }
-        }
-
-        if (typeof productData.highlights === "string") {
-            try {
-                productData.highlights = JSON.parse(productData.highlights);
-            } catch (error) {
-                return res.status(400).send({
-                    status: "ERROR",
-                    message: "Invalid JSON format in highlights",
-                });
-            }
-        }
-
-        // Add file paths to product data
-        if (files.img) {
-            productData.images = files.img.map(file => ({ path: file.path }));
-        }
-
-        const outputResult = await addNewProductHandlerV2(productData);
+        const outputResult = await addNewProductHandlerV2({ ...productData, files });
         res.status(200).send({
             status: "SUCCESS",
             data: { product: outputResult || {} }
