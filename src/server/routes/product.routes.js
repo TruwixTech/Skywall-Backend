@@ -88,7 +88,6 @@ router.route('/warranty-extender/:id').post(async (req, res) => {
     try {
         const productId = req.params;
         const warrantyMonths = req.body.warranty_months;
-        console.log("Warranty Months :"+warrantyMonths);
         const outputResult = await updateWarrantyPriceHandler(productId, warrantyMonths);
         res.status(responseStatus.STATUS_SUCCESS_OK);
         res.send({
