@@ -8,7 +8,8 @@ import {
     getProductDetailsHandler,
     getProductListHandler,
     updateProductDetailsHandler,
-    addNewProductHandlerV2
+    addNewProductHandlerV2,
+    updateWarrantyPriceHandler
 } from '../../common/lib/product/productHandler';
 import responseStatus from "../../common/constants/responseStatus.json";
 import responseData from "../../common/constants/responseData.json";
@@ -79,6 +80,30 @@ router.route('/new').post(protectRoutes.verifyAdmin,async (req, res) => {
         res.send({
             status: responseData.ERROR,
             data: { message: err }
+        });
+    }
+});
+
+router.route('/warranty-extender/:id').post(async (req, res) => {
+    try {
+        const productId = req.params;
+        console.log("Product ID:", productId);
+        const warrantyYears = req.body.warranty_years;
+        console.log("Warranty Years:", warrantyYears);
+        const outputResult = await updateWarrantyPriceHandler(productId, warrantyYears);
+        res.status(responseStatus.STATUS_SUCCESS_OK);
+        res.send({
+            status: responseData.SUCCESS,
+            data: {
+                product: outputResult ? outputResult : {}
+            }
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(responseStatus.INTERNAL_SERVER_ERROR);
+        res.send({
+            status: responseData.ERROR,
+            data: { message: err.message }
         });
     }
 });
