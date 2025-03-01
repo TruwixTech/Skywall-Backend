@@ -5,6 +5,7 @@ import userRoutes from './routes/user.routes';
 import productRoutes from './routes/product.routes';
 import orderRoutes from './routes/order.routes';
 import adminRoutes from './routes/admin.routes';
+import cors from 'cors';
 import authRoutes from './routes/auth.routes';
 import mainRoutes from './routes/main.routes';
 import config from './config';
@@ -14,9 +15,14 @@ const port = process.env.PORT || 3000;
 
 // Middleware
 app.use(bodyParser.json());
-
+app.use(cors(
+    {
+        origin: '*',
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    }
+));
 // Routes
-app.use('/',mainRoutes);
+app.use('/', mainRoutes);
 app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/product', productRoutes);
 app.use('/api/v1/order', orderRoutes);

@@ -22,12 +22,18 @@ export async function userSignupHandler(input) {
   // Prepare user data.
   const userData = {
     name: input.name,
-    address: input.address,
     phone: input.phone,
     password: hashedPassword,
     email: input.email,
-    age: input.age,
   };
+
+  // Check if user with the same email or phone already exists.
+  const existingUser = await userHelper.getObjectByQuery({
+    query: { $or: [{ email: input.email }, { phone: input.phone }] },
+  });
+  if (existingUser) {
+    throw "User with this email or phone already exists"
+  }
 
   const newUser = await userHelper.addObject(userData);
 
