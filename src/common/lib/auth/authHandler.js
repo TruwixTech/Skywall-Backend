@@ -116,7 +116,6 @@ export async function verifyUserOtpHandler(email, otp) {
       selectFrom: {
         name: 1,
         email: 1,
-        role: 1,
         otp: 1,
         otp_expiry: 1,
       },
@@ -163,7 +162,7 @@ export async function getUserByEmailPasswordHandler(input) {
 
     const filters = {
       query: { email: input.email },
-      selectFrom: { name: 1, email: 1, role: 1, password: 1 }, // Include password for comparison
+      selectFrom: { name: 1, email: 1, password: 1 }, // Include password for comparison
     };
 
     const user = await userHelper.getObjectByQuery(filters);
@@ -195,7 +194,7 @@ export async function getUserByEmailHandler(input) {
 
     const filters = {
       query: { email: input.email },
-      selectFrom: { name: 1, email: 1, role: 1 },
+      selectFrom: { name: 1, email: 1},
     };
 
     const user = await userHelper.getObjectByQuery(filters);
