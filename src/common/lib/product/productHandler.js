@@ -40,21 +40,21 @@ export async function addNewProductHandlerV2(input) {
   return await productHelper.addObject(input);
 }
 
-export async function updateWarrantyPriceHandler(productId, warrantyYears) {
+export async function updateWarrantyPriceHandler(productId, input_Warranty_months) {
   const product = await productHelper.getObjectById(productId);
   console.log("Product:", product);
   if (!product) {
     throw new Error("Product not found");
   }
-  const warrantyPricing = product.warranty_pricing[warrantyYears.toString()];
+  const warrantyPricing = product.warranty_pricing[input_Warranty_months.toString()];
   if (!warrantyPricing) {
     throw new Error("Invalid warranty years");
   }
 
   const newPrice = product.price + warrantyPricing;
-  const newWarrantyYears = product.warranty_years + warrantyYears;
+  const new_Warranty_months = product.warranty_months + input_Warranty_months;
   product.new_price = newPrice;
-  product.warranty_years = newWarrantyYears;
+  product.warranty_months = new_Warranty_months;
 
   return await productHelper.updateObject(productId.id, product);
 }
