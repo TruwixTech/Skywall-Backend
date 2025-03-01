@@ -87,8 +87,9 @@ router.route('/new').post(protectRoutes.verifyAdmin,async (req, res) => {
 router.route('/warranty-extender/:id').post(async (req, res) => {
     try {
         const productId = req.params;
-        const warrantyYears = req.body.warranty_months;
-        const outputResult = await updateWarrantyPriceHandler(productId, warrantyYears);
+        const warrantyMonths = req.body.warranty_months;
+        console.log("Warranty Months :"+warrantyMonths);
+        const outputResult = await updateWarrantyPriceHandler(productId, warrantyMonths);
         res.status(responseStatus.STATUS_SUCCESS_OK);
         res.send({
             status: responseData.SUCCESS,
