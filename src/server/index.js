@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import userRoutes from './routes/user.routes';
+import cors from 'cors';
 import productRoutes from './routes/product.routes';
 import orderRoutes from './routes/order.routes';
 import adminRoutes from './routes/admin.routes';
@@ -13,14 +14,9 @@ import config from './config';
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Middleware
 app.use(bodyParser.json());
-app.use(cors(
-    {
-        origin: '*',
-        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    }
-));
+app.use(cors({ origin: '*' }));
+
 // Routes
 app.use('/', mainRoutes);
 app.use('/api/v1/user', userRoutes);
