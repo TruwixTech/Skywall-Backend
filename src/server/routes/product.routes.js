@@ -206,6 +206,30 @@ router.route('/:id/update').post(protectRoutes.verifyAdmin, async (req, res) => 
     }
 });
 
+router.route('/:id/product-update').post(async (req, res) => {
+    try {
+        if (!_.isEmpty(req.body)) {
+            const outputResult = await addNewProductHandler(req.body.product);
+            res.status(responseStatus.STATUS_SUCCESS_OK);
+            res.send({
+                status: responseData.SUCCESS,
+                data: {
+                    product: outputResult ? outputResult : {}
+                }
+            });
+        } else {
+            throw 'no request body sent'
+        }
+    } catch (err) {
+        console.log(err)
+        res.status(responseStatus.INTERNAL_SERVER_ERROR);
+        res.send({
+            status: responseData.ERROR,
+            data: { message: err }
+        });
+    }
+});
+
 router.route('/:id/remove').post(protectRoutes.verifyAdmin, async (req, res) => {
     try {
         if (req.params.id) {
