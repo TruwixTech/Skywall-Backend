@@ -17,7 +17,6 @@ export function getUserInfo(user) {
     email: user.email,
     phone: user.phone,
     name: user.name,
-    role: user.role,
     address: user.address,
   };
 }

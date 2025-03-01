@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 app.use(cors({ origin: '*' }));
 
 // Routes
-app.use('/',mainRoutes);
+app.use('/', mainRoutes);
 app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/product', productRoutes);
 app.use('/api/v1/order', orderRoutes);
