@@ -6,7 +6,7 @@ export async function addNewProductHandler(input) {
   return await productHelper.addObject(input);
 }
 
-function calculateDiscountedPrice(price, discountPercentage) {
+export function calculateDiscountedPrice(price, discountPercentage) {
   if (price < 0 || discountPercentage < 0 || discountPercentage > 100) {
     throw new Error("Invalid price or discount percentage");
   }
