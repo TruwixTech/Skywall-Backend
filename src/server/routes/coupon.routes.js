@@ -12,6 +12,7 @@ import {
 } from '../../common/lib/coupon/couponHandler';
 import responseStatus from "../../common/constants/responseStatus.json";
 import responseData from "../../common/constants/responseData.json";
+import protectRoutes from "../../common/util/protectRoutes";
 
 const router = new Router();
 
@@ -55,7 +56,7 @@ router.route('/list').post(async (req, res) => {
   });
 
 
-router.route('/new').post(async (req, res) => {
+router.route('/new').post(protectRoutes.verifyAdmin,async (req, res) => {
     try {
        if (!_.isEmpty(req.body)) {
             const outputResult = await addNewCouponHandler(req.body.coupon);
@@ -79,7 +80,7 @@ router.route('/new').post(async (req, res) => {
     }
 });
 
-router.post('/create-coupon', async (req, res) => {
+router.route('/create-coupon').post(protectRoutes.verifyAdmin,async (req, res) => {
     try {
         const outputResult = await createCouponHandler(req.body);
         res.status(responseStatus.STATUS_SUCCESS_OK);
