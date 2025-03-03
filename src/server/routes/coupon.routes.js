@@ -124,7 +124,7 @@ router.route('/:id').get(async (req, res) => {
     }
 });
 
-router.route('/:id/update').post( async (req, res) => {
+router.route('/:id/update').post(protectRoutes.verifyAdmin,async (req, res) => {
     try {
         if (!_.isEmpty(req.params.id) && !_.isEmpty(req.body) && !_.isEmpty(req.body.coupon)) {
             let input = {
@@ -152,7 +152,7 @@ router.route('/:id/update').post( async (req, res) => {
     }
 });
 
-router.route('/:id/remove').post(async(req, res) => {
+router.route('/:id/remove').post(protectRoutes.verifyAdmin,async(req, res) => {
     try {
         if (req.params.id) {
             const deletedCoupon = await deleteCouponHandler(req.params.id);
