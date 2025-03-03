@@ -3,6 +3,9 @@ import adminHelper from "../../helpers/admin.helper";
 import { generateToken } from "../../util/authUtil";
 import bcrypt from "bcryptjs";
 import { getAdminInfo } from "../../util/utilHelper";
+import userHelper from '../../helpers/user.helper';
+import orderHelper from '../../helpers/order.helper';
+import productHelper from "../../helpers/product.helper";
 
 export async function adminSignupHandler(input) {
   const existingAdmin = await adminHelper.getObjectByQuery({
@@ -27,6 +30,16 @@ export async function adminSignupHandler(input) {
   const token = generateToken(newAdmin._id, newAdmin.role);
 
   return { admin: getAdminInfo(newAdmin), token };
+}
+
+export async function getDashboardData(input) {
+  const user_count = await userHelper.getAllObjectCount(input);
+  const order_count = await orderHelper.getAllObjectCount(input);
+  const product_count = await productHelper.getAllObjectCount(input);
+  const products = await productHelper.getAllObjects(input);
+  const total_stock=0;
+  products.forEach(product => {ts+=product.stock});
+  return { user_count, order_count, product_count, total_stock};
 }
 
 export async function adminLoginHandler(input) {

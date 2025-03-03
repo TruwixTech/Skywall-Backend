@@ -5,3 +5,4 @@ export const COMPLETED = "Completed";
 export const CANCELLED = "Cancelled";
 export const SUPERADMIN = "SuperAdmin";
 export const SUBADMIN = "SubAdmin";
+export const BUSINESS = "Business";

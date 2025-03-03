@@ -21,16 +21,19 @@ const productSchema = new Schema({
     new_price:{
         type:Number
     },
+    stock:{
+        type:Number
+    },
     warranty_pricing: {
         type: Map,
         of: Number,
         default: { "1": 1200, "2": 1500, "3": 2000 }
     },
-    stock:{
-        type:Number
-    },
     warranty_months:{
         type:Number
+    },
+    warranty_expiry_date:{
+         type:Date
     },
     highlights:{
         type:[String],
