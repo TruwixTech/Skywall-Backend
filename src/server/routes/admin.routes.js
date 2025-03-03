@@ -102,7 +102,7 @@ router.route('/list').post(protectRoutes.authenticateToken,async (req, res) => {
     }
   });
 
-router.route('/dashboard').get(async (req,res)=>{
+router.route('/dashboard').get(protectRoutes.authenticateToken,async(req,res)=>{
     try{
         let filter = {};
         filter.query = {};
