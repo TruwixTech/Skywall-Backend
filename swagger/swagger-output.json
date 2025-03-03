@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "version": "1.0.0",
+    "version": "1.0.3",
     "title": "Core",
     "description": "This Service handles all APIs for Core!"
   },
@@ -22,6 +22,7 @@
   "paths": {
     "/": {
       "get": {
+        "tags": ["Main"],
         "description": "",
         "responses": {
           "200": {
@@ -32,6 +33,7 @@
     },
     "/config": {
       "get": {
+        "tags": ["Main"],
         "description": "",
         "responses": {
           "200": {
@@ -42,6 +44,7 @@
     },
     "/api/v1/user/list": {
       "post": {
+        "tags": ["User"],
         "description": "",
         "responses": {
           "200": {
@@ -52,6 +55,7 @@
     },
     "/api/v1/user/new": {
       "post": {
+        "tags": ["User"],
         "description": "",
         "parameters": [
           {
@@ -76,6 +80,7 @@
     },
     "/api/v1/user/{id}": {
       "get": {
+        "tags": ["User"],
         "description": "",
         "parameters": [
           {
@@ -94,6 +99,7 @@
     },
     "/api/v1/user/{id}/update": {
       "post": {
+        "tags": ["User"],
         "description": "",
         "parameters": [
           {
@@ -124,6 +130,7 @@
     },
     "/api/v1/user/{id}/remove": {
       "post": {
+        "tags": ["User"],
         "description": "",
         "parameters": [
           {
@@ -142,6 +149,7 @@
     },
     "/api/v1/product/list": {
       "post": {
+        "tags": ["Product"],
         "description": "",
         "responses": {
           "200": {
@@ -152,6 +160,7 @@
     },
     "/api/v1/product/new": {
       "post": {
+        "tags": ["Product"],
         "description": "",
         "parameters": [
           {
@@ -187,6 +196,7 @@
     },
     "/api/v1/product/warranty-extender/{id}": {
       "post": {
+        "tags": ["Product"],
         "description": "",
         "parameters": [
           {
@@ -217,6 +227,7 @@
     },
     "/api/v1/product/add-product": {
       "post": {
+        "tags": ["Product"],
         "description": "",
         "parameters": [
           {
@@ -243,6 +254,7 @@
     },
     "/api/v1/product/{id}": {
       "get": {
+        "tags": ["Product"],
         "description": "",
         "parameters": [
           {
@@ -261,6 +273,7 @@
     },
     "/api/v1/product/{id}/update": {
       "post": {
+        "tags": ["Product"],
         "description": "",
         "parameters": [
           {
@@ -302,6 +315,7 @@
     },
     "/api/v1/product/{id}/product-update": {
       "post": {
+        "tags": ["Product"],
         "description": "",
         "parameters": [
           {
@@ -332,6 +346,7 @@
     },
     "/api/v1/product/{id}/remove": {
       "post": {
+        "tags": ["Product"],
         "description": "",
         "parameters": [
           {
@@ -361,6 +376,7 @@
     },
     "/api/v1/order/list": {
       "post": {
+        "tags": ["Order"],
         "description": "",
         "responses": {
           "200": {
@@ -371,6 +387,7 @@
     },
     "/api/v1/order/new": {
       "post": {
+        "tags": ["Order"],
         "description": "",
         "parameters": [
           {
@@ -395,6 +412,7 @@
     },
     "/api/v1/order/{id}": {
       "get": {
+        "tags": ["Order"],
         "description": "",
         "parameters": [
           {
@@ -413,6 +431,7 @@
     },
     "/api/v1/order/{id}/update": {
       "post": {
+        "tags": ["Order"],
         "description": "",
         "parameters": [
           {
@@ -443,6 +462,7 @@
     },
     "/api/v1/order/{id}/remove": {
       "post": {
+        "tags": ["Order"],
         "description": "",
         "parameters": [
           {
@@ -461,6 +481,7 @@
     },
     "/api/v1/admin/signup": {
       "post": {
+        "tags": ["Admin"],
         "description": "",
         "responses": {
           "200": {
@@ -471,6 +492,7 @@
     },
     "/api/v1/admin/login": {
       "post": {
+        "tags": ["Admin"],
         "description": "",
         "responses": {
           "200": {
@@ -481,6 +503,7 @@
     },
     "/api/v1/admin/list": {
       "post": {
+        "tags": ["Admin"],
         "description": "",
         "parameters": [
           {
@@ -501,6 +524,7 @@
     },
     "/api/v1/admin/new": {
       "post": {
+        "tags": ["Admin"],
         "description": "",
         "parameters": [
           {
@@ -525,6 +549,7 @@
     },
     "/api/v1/admin/{id}": {
       "get": {
+        "tags": ["Admin"],
         "description": "",
         "parameters": [
           {
@@ -543,6 +568,7 @@
     },
     "/api/v1/admin/{id}/update": {
       "post": {
+        "tags": ["Admin"],
         "description": "",
         "parameters": [
           {
@@ -573,6 +599,7 @@
     },
     "/api/v1/admin/{id}/remove": {
       "post": {
+        "tags": ["Admin"],
         "description": "",
         "parameters": [
           {
@@ -591,6 +618,7 @@
     },
     "/api/v1/auth/signup": {
       "post": {
+        "tags": ["Auth"],
         "description": "",
         "responses": {
           "200": {
@@ -601,6 +629,7 @@
     },
     "/api/v1/auth/login": {
       "post": {
+        "tags": ["Auth"],
         "description": "",
         "responses": {
           "200": {
@@ -611,6 +640,7 @@
     },
     "/api/v1/auth/test-mail": {
       "post": {
+        "tags": ["Auth"],
         "description": "",
         "parameters": [
           {
@@ -635,6 +665,7 @@
     },
     "/api/v1/auth/verify-email-otp": {
       "post": {
+        "tags": ["Auth"],
         "description": "",
         "parameters": [
           {
@@ -662,6 +693,7 @@
     },
     "/api/v1/coupon/list": {
       "post": {
+        "tags": ["Coupon"],
         "description": "",
         "responses": {
           "200": {
@@ -672,6 +704,7 @@
     },
     "/api/v1/coupon/new": {
       "post": {
+        "tags": ["Coupon"],
         "description": "",
         "parameters": [
           {
@@ -696,6 +729,7 @@
     },
     "/api/v1/coupon/create-coupon": {
       "post": {
+        "tags": ["Coupon"],
         "description": "",
         "responses": {
           "200": {
@@ -706,6 +740,7 @@
     },
     "/api/v1/coupon/{id}": {
       "get": {
+        "tags": ["Coupon"],
         "description": "",
         "parameters": [
           {
@@ -724,6 +759,7 @@
     },
     "/api/v1/coupon/{id}/update": {
       "post": {
+        "tags": ["Coupon"],
         "description": "",
         "parameters": [
           {
@@ -754,6 +790,7 @@
     },
     "/api/v1/coupon/{id}/remove": {
       "post": {
+        "tags": ["Coupon"],
         "description": "",
         "parameters": [
           {
