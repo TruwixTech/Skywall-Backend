@@ -8,7 +8,8 @@ import {
     addNewAdminHandler,
     getAdminDetailsHandler,
     getAdminListHandler,
-    updateAdminDetailsHandler
+    updateAdminDetailsHandler,
+    getDashboardData
 } from '../../common/lib/admin/adminHandler';
 import responseStatus from "../../common/constants/responseStatus.json";
 import responseData from "../../common/constants/responseData.json";
@@ -101,6 +102,43 @@ router.route('/list').post(protectRoutes.authenticateToken,async (req, res) => {
     }
   });
 
+router.route('/dashboard').get(async (req,res)=>{
+    try{
+        let filter = {};
+        filter.query = {};
+
+        const inputData = { ...req.body };
+        if (inputData) {
+            filter.pageNum = inputData.pageNum ? inputData.pageNum : 1;
+            filter.pageSize = inputData.pageSize ? inputData.pageSize : 50;
+
+            if (inputData.filters) {
+            filter.query = inputData.filters;
+            }
+        } else {
+            filter.pageNum = 1;
+            filter.pageSize = 50;
+        }
+
+        filter.query = { ...filter.query };
+  
+        const dashboard_data = await getDashboardData(filter);
+        res.status(responseStatus.STATUS_SUCCESS_OK);
+        res.send({
+            status: responseData.SUCCESS,
+            data: { dashboard_data }
+        });
+    }
+    catch(err)
+    {
+        console.log(err);
+        res.status(responseStatus.INTERNAL_SERVER_ERROR);
+        res.send({
+            status: responseData.ERROR,
+            data: { message: err },
+        });
+    }
+});
 
 router.route('/new').post(async (req, res) => {
     try {

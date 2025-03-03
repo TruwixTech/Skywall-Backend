@@ -1,6 +1,6 @@
 
 import mongoose from 'mongoose';
-import { ADMIN, USER } from '../constants/enum';
+import { BUSINESS, USER } from '../constants/enum';
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
@@ -23,7 +23,7 @@ const userSchema = new Schema({
     },
     role: {
         type: String,
-        enum: [ADMIN, USER],
+        enum: [BUSINESS, USER],
         default: USER
     },
     is_deleted: {

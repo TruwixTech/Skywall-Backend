@@ -14,8 +14,16 @@ const orderSchema = new Schema({
     quantity: {
         type: Number
     },
-    total_price: {
-        type: Number
+    totalPrice: {
+        type: Number,
+        required: true,
+        min: [0, "Total price cannot be negative"],
+    },
+    shippingAddress: {
+        type: String,
+    },
+    expectedDelivery: {
+        type: Date,
     },
     status: {
         type: String,
