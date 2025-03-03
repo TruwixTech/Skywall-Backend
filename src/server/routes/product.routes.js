@@ -9,7 +9,8 @@ import {
     getProductListHandler,
     updateProductDetailsHandler,
     addNewProductHandlerV2,
-    updateWarrantyPriceHandler
+    updateWarrantyPriceHandler,
+    updateProductv2Handler
 } from '../../common/lib/product/productHandler';
 import responseStatus from "../../common/constants/responseStatus.json";
 import responseData from "../../common/constants/responseData.json";
@@ -175,6 +176,34 @@ router.route('/:id/update').post(protectRoutes.verifyAdmin, async (req, res) => 
     }
 });
 
+router.route('/:id/update/v2').post(protectRoutes.verifyAdmin, upload.fields([{ name: "img", maxCount: 5 }]), async (req, res) => {
+    try {
+      if (!_.isEmpty(req.params.id) && !_.isEmpty(req.body) && !_.isEmpty(req.body.product)) {
+        let input = {
+          objectId: req.params.id,  // Just the ID string, not the entire params object
+          updateObject: req.body.product,
+          files: req.files
+        };
+        const updateObjectResult = await updateProductv2Handler(input);
+        res.status(responseStatus.STATUS_SUCCESS_OK);
+        res.send({
+          status: responseData.SUCCESS,
+          data: {
+            product: updateObjectResult ? updateObjectResult : {}
+          }
+        });
+      } else {
+        throw 'no body or id param sent';
+      }
+    } catch (err) {
+      console.log(err);
+      res.status(responseStatus.INTERNAL_SERVER_ERROR);
+      res.send({
+        status: responseData.ERROR,
+        data: { message: err }
+      });
+    }
+  });
 router.route('/:id/product-update').post(async (req, res) => {
     try {
         if (!_.isEmpty(req.body)) {

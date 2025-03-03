@@ -37,9 +37,16 @@ export async function getDashboardData(input) {
   const order_count = await orderHelper.getAllObjectCount(input);
   const product_count = await productHelper.getAllObjectCount(input);
   const products = await productHelper.getAllObjects(input);
-  const total_stock=0;
-  products.forEach(product => {ts+=product.stock});
-  return { user_count, order_count, product_count, total_stock};
+
+  // Initialize total_stock to 0
+  let total_stock = 0;
+
+  // Calculate total stock
+  products.forEach(product => {
+    total_stock += product.stock;
+  });
+
+  return { user_count, order_count, product_count, total_stock };
 }
 
 export async function adminLoginHandler(input) {
