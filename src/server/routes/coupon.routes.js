@@ -16,7 +16,7 @@ import protectRoutes from "../../common/util/protectRoutes";
 
 const router = new Router();
 
-router.route('/list').post(async (req, res) => {
+router.route('/list').post(protectRoutes.verifyAdmin,async (req, res) => {
     try {
       let filter = {};
       filter.query = {};
@@ -100,7 +100,7 @@ router.route('/create-coupon').post(protectRoutes.verifyAdmin,async (req, res) =
     }
 });
 
-router.route('/:id').get(async (req, res) => {
+router.route('/:id').get(protectRoutes.verifyAdmin,async (req, res) => {
     try {
         if (req.params.id) {
             const gotCoupon = await getCouponDetailsHandler(req.params);
