@@ -86,14 +86,12 @@ export async function updateProductDetailsHandler(input) {
 }
 
 export async function updateProductv2Handler(input) {
-  console.log("input :", input.objectId);
   
   const filters = {
     id: input.objectId
   };
   
   const existingProduct = await productHelper.getObjectById(filters);
-  console.log("existingProduct :", existingProduct);
   
   if (!existingProduct) {
     throw new Error("Product not found");
