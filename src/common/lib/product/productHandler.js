@@ -30,6 +30,22 @@ export async function addNewProductHandlerV2(input) {
     input.highlights = JSON.parse(input.highlights);
   }
 
+  if (typeof input.warranty_pricing === "string") {
+    try {
+      input.warranty_pricing = JSON.parse(input.warranty_pricing);
+    } catch (error) {
+      console.error("Invalid JSON in warranty_pricing:", error);
+      input.warranty_pricing = {}; // Default to an empty object if parsing fails
+    }
+  }
+
+
+  if (typeof input.warranty_pricing === "object" && input.warranty_pricing !== null) {
+    Object.keys(input.warranty_pricing).forEach((key) => {
+      input.warranty_pricing[key] = Number(input.warranty_pricing[key]); // Convert price values to numbers
+    });
+  }
+
   // Add file paths to product data
   if (input.files.img) {
     input.images = input.files.img.map(file => ({ path: file.path }));
@@ -86,39 +102,62 @@ export async function updateProductDetailsHandler(input) {
 }
 
 export async function updateProductv2Handler(input) {
-  console.log("input :", input.objectId);
-  
   const filters = {
     id: input.objectId
   };
-  
+
   const existingProduct = await productHelper.getObjectById(filters);
-  console.log("existingProduct :", existingProduct);
-  
+
   if (!existingProduct) {
     throw new Error("Product not found");
   }
 
-  // Handle specificationSchema - Parse and assign to the updateObject
+  // Handle specificationSchema
   if (input.updateObject.specificationSchema && typeof input.updateObject.specificationSchema === "string") {
     input.updateObject.specificationSchema = JSON.parse(input.updateObject.specificationSchema);
   }
 
-  // Handle highlights - Parse and assign to the updateObject
+  // Handle warranty_pricing correctly
+  if (input.updateObject.warranty_pricing && typeof input.updateObject.warranty_pricing === "string") {
+    try {
+      input.updateObject.warranty_pricing = JSON.parse(input.updateObject.warranty_pricing);
+    } catch (error) {
+      console.error("Invalid JSON in warranty_pricing:", error);
+      input.updateObject.warranty_pricing = {}; // Default to empty object if parsing fails
+    }
+  }
+
+  if (typeof input.updateObject.warranty_pricing === "object" && input.updateObject.warranty_pricing !== null) {
+    Object.keys(input.updateObject.warranty_pricing).forEach((key) => {
+      input.updateObject.warranty_pricing[key] = Number(input.updateObject.warranty_pricing[key]); // Convert values to numbers
+    });
+  }
+
+  // Handle highlights
   if (input.updateObject.highlights && typeof input.updateObject.highlights === "string") {
     input.updateObject.highlights = JSON.parse(input.updateObject.highlights);
   }
 
-  if (input.files && input.files.img) {
-    input.images = input.files.img.map(file => ({ path: file.path }));
+  // Parse existingImages properly
+  let existingImages = existingProduct.image || [];
+  if (input.updateObject.existingImages && typeof input.updateObject.existingImages === "string") {
+    try {
+      existingImages = JSON.parse(input.updateObject.existingImages);
+    } catch (error) {
+      console.error("Invalid JSON in existingImages:", error);
+    }
   }
 
-  let imageUrls = existingProduct.image || [];
-  let new_price = calculateDiscountedPrice(input.updateObject.price, input.updateObject.discount_percentage);
+  // Handle new images
+  let newImages = [];
+  if (input.files && input.files.img) {
+    newImages = input.files.img.map(file => ({ path: file.path }));
+  }
 
-  // Upload new images to Cloudinary and append to existing images
-  if (input.images && input.images.length > 0) {
-    for (const image of input.images) {
+  // Upload new images to Cloudinary and merge with existing ones
+  let imageUrls = [...existingImages];
+  if (newImages.length > 0) {
+    for (const image of newImages) {
       const result = await cloudinary.uploader.upload(image.path, {
         folder: "products",
       });
@@ -126,15 +165,19 @@ export async function updateProductv2Handler(input) {
     }
   }
 
-  // Add image URLs to the product input
+  // Update the product with the merged image list
   input.updateObject.image = imageUrls;
+
+  // Calculate new price
+  let new_price = calculateDiscountedPrice(input.updateObject.price, input.updateObject.discount_percentage);
   if (!isNaN(new_price) && new_price !== null && new_price !== undefined) {
     input.updateObject.new_price = new_price;
   }
 
-  // Use the string ID for directUpdateObject
+  // Perform the update operation
   return await productHelper.directUpdateObject(input.objectId, input.updateObject);
 }
+
 
 
 export async function getProductListHandler(input) {
