@@ -154,7 +154,6 @@ export async function verifyUserOtpHandler(email, otp) {
 
 export async function getUserByEmailPasswordHandler(input) {
   try {
-    console.log("Received input:", input);
 
     if (_.isEmpty(input.email) || _.isEmpty(input.password)) {
       throw "Email and password are required";

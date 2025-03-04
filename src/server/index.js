@@ -13,6 +13,9 @@ import adminRoutes from './routes/admin.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import mainRoutes from './routes/main.routes.js';
 import couponRoutes from './routes/coupon.routes.js';
+import otpRoutes from './routes/otp.routes.js';
+import cartRoutes from './routes/cart.routes.js';
+
 import config from './config.js';
 import http from 'http';
 import swaggerUi from 'swagger-ui-express';
@@ -81,6 +84,8 @@ app.use('/api/v1/order', orderRoutes);
 app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/coupon', couponRoutes);
+app.use('/api/v1/otp', otpRoutes);
+app.use('/api/v1/cart', cartRoutes);
 
 app.use(
   '/api-docs',
