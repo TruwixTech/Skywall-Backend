@@ -52,14 +52,13 @@ router.route("/test-mail").post(async (req, res) => {
         throw 'Email is required';
     }
     const gotUser = await getUserByEmailHandler({ email});
-    console.log(gotUser+": User");
+    
     if (!gotUser) {
         return res.status(responseStatus.STATUS_UNAUTHORIZED).send({
             status: responseData.ERROR,
             data: { message: 'Invalid email or password' }
         });
     }
-    console.log(gotUser.name);
     const otp = generateOtp(6);
     const expiry = generateOtpExpireDate();
     
