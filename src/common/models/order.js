@@ -7,10 +7,22 @@ const orderSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
-    product_id: {
-        type: Schema.Types.ObjectId,
-        ref: 'Product'
-    },
+    products:[
+        {
+        product_id: {
+            type: Schema.Types.ObjectId,
+            ref: 'Product'
+        },
+        quantity: {
+            type: Number,
+            required: true,
+            min:1
+        },
+        warranty_expiry_date:{
+            type:Date
+       }
+    }
+    ],
     quantity: {
         type: Number
     },
@@ -25,9 +37,6 @@ const orderSchema = new Schema({
     expectedDelivery: {
         type: Date,
     },
-    warranty_expiry_date:{
-        type:Date
-   },
     status: {
         type: String,
         enum: [PENDING,COMPLETED,CANCELLED],
