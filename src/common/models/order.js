@@ -25,6 +25,9 @@ const orderSchema = new Schema({
     expectedDelivery: {
         type: Date,
     },
+    warranty_expiry_date:{
+        type:Date
+   },
     status: {
         type: String,
         enum: [PENDING,COMPLETED,CANCELLED],
