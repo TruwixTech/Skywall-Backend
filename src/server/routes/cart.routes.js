@@ -11,10 +11,11 @@ import {
 } from '../../common/lib/cart/cartHandler';
 import responseStatus from "../../common/constants/responseStatus.json";
 import responseData from "../../common/constants/responseData.json";
+import protectRoutes from "../../common/util/protectRoutes";
 
 const router = new Router();
 
-router.route('/list').post(async (req, res) => {
+router.route('/list').post(protectRoutes.authenticateToken,async (req, res) => {
     try {
       let filter = {};
       filter.query = {};
@@ -54,7 +55,7 @@ router.route('/list').post(async (req, res) => {
   });
 
 
-router.route('/new').post(async (req, res) => {
+router.route('/new').post(protectRoutes.authenticateToken,async (req, res) => {
     try {
        if (!_.isEmpty(req.body)) {
             const outputResult = await addNewCartHandler(req.body.cart);
@@ -78,7 +79,7 @@ router.route('/new').post(async (req, res) => {
     }
 });
 
-router.route('/:id').get(async (req, res) => {
+router.route('/:id').get(protectRoutes.authenticateToken,async (req, res) => {
     try {
         if (req.params.id) {
             const gotCart = await getCartDetailsHandler(req.params);
@@ -102,7 +103,7 @@ router.route('/:id').get(async (req, res) => {
     }
 });
 
-router.route('/:id/update').post( async (req, res) => {
+router.route('/:id/update').post(protectRoutes.authenticateToken,async (req, res) => {
     try {
         if (!_.isEmpty(req.params.id) && !_.isEmpty(req.body) && !_.isEmpty(req.body.cart)) {
             let input = {
@@ -130,7 +131,7 @@ router.route('/:id/update').post( async (req, res) => {
     }
 });
 
-router.route('/:id/remove').post(async(req, res) => {
+router.route('/:id/remove').post(protectRoutes.authenticateToken,async(req, res) => {
     try {
         if (req.params.id) {
             const deletedCart = await deleteCartHandler(req.params.id);
