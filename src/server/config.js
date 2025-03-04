@@ -9,11 +9,9 @@ mongoURL:
 PORT: Number(process.env.PORT) || 8080,
 JWT_SECRET: "5kYw@lL",
 
-EMAIL_USER:  `adityarajmgm@gmail.com`,
+EMAIL_USER:  `truwixtech@gmail.com`,
 
-EMAIL_PASS:  `dbqafichejzypruw`,
-
-MAIL_SEND:  `adityarajcv@outlook.com`,
+EMAIL_PASS:  `bevputbfmnhmyowe`,
 
 EMAIL_USER_OTP : ``,
 EMAIL_PASS_OTP : ``,
