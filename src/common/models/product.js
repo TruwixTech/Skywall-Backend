@@ -32,9 +32,6 @@ const productSchema = new Schema({
     warranty_months:{
         type:Number
     },
-    warranty_expiry_date:{
-         type:Date
-    },
     highlights:{
         type:[String],
         default:[]
