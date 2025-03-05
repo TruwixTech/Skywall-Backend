@@ -153,7 +153,7 @@ router.route('/:id/update').post(protectRoutes.verifyAdmin, async (req, res) => 
         if (!_.isEmpty(req.params.id) && !_.isEmpty(req.body) && !_.isEmpty(req.body.product)) {
             let input = {
                 objectId: req.params.id,
-                updateObject: req.body.product
+                updateObject: req.body
             }
             const updateObjectResult = await updateProductDetailsHandler(input);
             res.status(responseStatus.STATUS_SUCCESS_OK);
@@ -180,8 +180,7 @@ router.route('/:id/update/v2').post(protectRoutes.verifyAdmin, upload.fields([{ 
     try {
       
         const files = req.files;
-        const productData = req.body.product;
-        console.log("productData", productData);
+        const productData = req.body;
         const updateObjectResult = await updateProductv2Handler({ objectId: req.params.id, updateObject: { ...productData, files } });
         res.status(responseStatus.STATUS_SUCCESS_OK);
         res.send({
