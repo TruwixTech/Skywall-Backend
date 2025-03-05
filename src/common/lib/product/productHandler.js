@@ -19,19 +19,40 @@ function calculateDiscountedPrice(price, discountPercentage) {
 
 export async function addNewProductHandlerV2(input) {
   if (typeof input.specificationSchema === "string") {
-    let parsedSpecs = JSON.parse(input.specificationSchema);
-    // Remove empty objects and ensure correct structure
-    input.specificationSchema = parsedSpecs.filter(
-      spec => spec.title.trim() !== "" && Array.isArray(spec.data) && spec.data.length > 0
-    ).map(spec => ({
-      title: spec.title.trim(),
-      data: spec.data.filter(
-        item => item.key.trim() !== "" && item.value.trim() !== ""
-      ).map(item => ({
-        key: item.key.trim(),
-        value: item.value.trim()
-      }))
-    }));
+    try {
+      let parsedSpecs = JSON.parse(input.specificationSchema);
+
+      // Ensure it is an array before proceeding
+      if (Array.isArray(parsedSpecs)) {
+        input.specificationSchema = parsedSpecs
+          .filter(spec =>
+            typeof spec.title === "string" &&
+            spec.title.trim() !== "" &&
+            Array.isArray(spec.data) &&
+            spec.data.length > 0
+          )
+          .map(spec => ({
+            title: spec.title.trim(),
+            data: spec.data
+              .filter(item =>
+                typeof item.key === "string" &&
+                typeof item.value === "string" &&
+                item.key.trim() !== "" &&
+                item.value.trim() !== ""
+              )
+              .map(item => ({
+                key: item.key.trim(),
+                value: item.value.trim()
+              }))
+          }))
+          .filter(spec => spec.data.length > 0); // Remove specifications with empty `data` arrays
+      } else {
+        input.specificationSchema = []; // Default to an empty array if it's not valid
+      }
+    } catch (error) {
+      console.error("Error parsing specificationSchema:", error);
+      input.specificationSchema = []; // Default to an empty array on error
+    }
   }
 
   if (typeof input.highlights === "string") {
@@ -115,27 +136,41 @@ export async function updateProductv2Handler(input) {
   };
 
   const existingProduct = await productHelper.getObjectById(filters);
-  
+
   if (!existingProduct) {
     throw new Error("Product not found");
   }
   
   // Handle specificationSchema
   if (input.updateObject.specificationSchema && typeof input.updateObject.specificationSchema === "string") {
-    let parsedSpecs = JSON.parse(input.updateObject.specificationSchema);
-    // Remove empty objects and ensure correct structure
-    input.updateObject.specificationSchema = parsedSpecs.filter(
-      spec => spec.title.trim() !== "" && Array.isArray(spec.data) && spec.data.length > 0
-    ).map(spec => ({
-      title: spec.title.trim(),
-      data: spec.data.filter(
-        item => item.key.trim() !== "" && item.value.trim() !== ""
-      ).map(item => ({
-        key: item.key.trim(),
-        value: item.value.trim()
-      }))
-    }));
+    try {
+      let parsedSpecs = JSON.parse(input.updateObject.specificationSchema);
+
+      // Ensure valid structure and remove empty entries
+      input.updateObject.specificationSchema = parsedSpecs
+        .filter(spec =>
+          typeof spec.title === "string" && spec.title.trim() !== "" &&
+          Array.isArray(spec.data) && spec.data.length > 0
+        )
+        .map(spec => ({
+          title: spec.title.trim(),
+          data: (Array.isArray(spec.data) ? spec.data : []) // Ensure `data` is an array
+            .filter(item =>
+              typeof item.key === "string" && item.key.trim() !== "" &&
+              typeof item.value === "string" && item.value.trim() !== ""
+            )
+            .map(item => ({
+              key: item.key.trim(),
+              value: item.value.trim()
+            }))
+        }));
+
+    } catch (error) {
+      console.error("Error parsing specificationSchema:", error);
+      input.updateObject.specificationSchema = []; // Set to an empty array in case of error
+    }
   }
+
 
   // Handle highlights
   if (input.updateObject.highlights && typeof input.updateObject.highlights === "string") {
