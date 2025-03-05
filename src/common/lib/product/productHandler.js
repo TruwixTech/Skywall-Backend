@@ -20,10 +20,18 @@ function calculateDiscountedPrice(price, discountPercentage) {
 export async function addNewProductHandlerV2(input) {
   if (typeof input.specificationSchema === "string") {
     let parsedSpecs = JSON.parse(input.specificationSchema);
-    // Remove empty objects
+    // Remove empty objects and ensure correct structure
     input.specificationSchema = parsedSpecs.filter(
-      spec => spec.title.trim() !== "" && spec.key.trim() !== "" && spec.value.trim() !== ""
-    );
+      spec => spec.title.trim() !== "" && Array.isArray(spec.data) && spec.data.length > 0
+    ).map(spec => ({
+      title: spec.title.trim(),
+      data: spec.data.filter(
+        item => item.key.trim() !== "" && item.value.trim() !== ""
+      ).map(item => ({
+        key: item.key.trim(),
+        value: item.value.trim()
+      }))
+    }));
   }
 
   if (typeof input.highlights === "string") {
@@ -114,7 +122,24 @@ export async function updateProductv2Handler(input) {
 
   // Handle specificationSchema
   if (input.updateObject.specificationSchema && typeof input.updateObject.specificationSchema === "string") {
-    input.updateObject.specificationSchema = JSON.parse(input.updateObject.specificationSchema);
+    let parsedSpecs = JSON.parse(input.updateObject.specificationSchema);
+    // Remove empty objects and ensure correct structure
+    input.updateObject.specificationSchema = parsedSpecs.filter(
+      spec => spec.title.trim() !== "" && Array.isArray(spec.data) && spec.data.length > 0
+    ).map(spec => ({
+      title: spec.title.trim(),
+      data: spec.data.filter(
+        item => item.key.trim() !== "" && item.value.trim() !== ""
+      ).map(item => ({
+        key: item.key.trim(),
+        value: item.value.trim()
+      }))
+    }));
+  }
+
+  // Handle highlights
+  if (input.updateObject.highlights && typeof input.updateObject.highlights === "string") {
+    input.updateObject.highlights = JSON.parse(input.updateObject.highlights);
   }
 
   // Handle warranty_pricing correctly
@@ -131,11 +156,6 @@ export async function updateProductv2Handler(input) {
     Object.keys(input.updateObject.warranty_pricing).forEach((key) => {
       input.updateObject.warranty_pricing[key] = Number(input.updateObject.warranty_pricing[key]); // Convert values to numbers
     });
-  }
-
-  // Handle highlights
-  if (input.updateObject.highlights && typeof input.updateObject.highlights === "string") {
-    input.updateObject.highlights = JSON.parse(input.updateObject.highlights);
   }
 
   // Parse existingImages properly
@@ -177,7 +197,6 @@ export async function updateProductv2Handler(input) {
   // Perform the update operation
   return await productHelper.directUpdateObject(input.objectId, input.updateObject);
 }
-
 
 
 export async function getProductListHandler(input) {

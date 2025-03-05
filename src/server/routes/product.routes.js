@@ -178,13 +178,11 @@ router.route('/:id/update').post(protectRoutes.verifyAdmin, async (req, res) => 
 
 router.route('/:id/update/v2').post(protectRoutes.verifyAdmin, upload.fields([{ name: "img", maxCount: 5 }]), async (req, res) => {
     try {
-      if (!_.isEmpty(req.params.id) && !_.isEmpty(req.body)) {
-        let input = {
-          objectId: req.params.id,  // Just the ID string, not the entire params object
-          updateObject: req.body,
-          files: req.files
-        };
-        const updateObjectResult = await updateProductv2Handler(input);
+      
+        const files = req.files;
+        const productData = req.body.product;
+        console.log("productData", productData);
+        const updateObjectResult = await updateProductv2Handler({ objectId: req.params.id, updateObject: { ...productData, files } });
         res.status(responseStatus.STATUS_SUCCESS_OK);
         res.send({
           status: responseData.SUCCESS,
@@ -192,10 +190,8 @@ router.route('/:id/update/v2').post(protectRoutes.verifyAdmin, upload.fields([{ 
             product: updateObjectResult ? updateObjectResult : {}
           }
         });
-      } else {
-        throw 'no body or id param sent';
       }
-    } catch (err) {
+     catch (err) {
       console.log(err);
       res.status(responseStatus.INTERNAL_SERVER_ERROR);
       res.send({
