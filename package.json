@@ -1,6 +1,6 @@
 {
   "name": "skywall-backend",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "An E-Commerce Website",
   "main": "index.js",
   "keywords": [],
