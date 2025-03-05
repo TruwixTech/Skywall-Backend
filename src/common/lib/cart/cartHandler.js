@@ -5,8 +5,32 @@ import Pincode from 'pincode-distance';
 import { getDistanceByPincode, getDistance} from '../shipping/shippingHandler';
 
 export async function addNewCartHandler(input) {
-    return await cartHelper.addObject(input);
+    const cart = await cartHelper.getObjectByQuery({ query: { user: input.user } });
+    if (cart) {
+        // Update the existing cart with the new details
+        const updatedItems = [...cart.items];
+        input.items.forEach(newItem => {
+            const existingItemIndex = updatedItems.findIndex(item => item.product.toString() === newItem.product.toString());
+            if (existingItemIndex !== -1) {
+                // Update the quantity of the existing product
+                updatedItems[existingItemIndex].quantity += newItem.quantity;
+            } else {
+                // Add the new product to the cart
+                updatedItems.push(newItem);
+            }
+        });
+
+        const updatedCart = {
+            ...cart._doc,
+            items: updatedItems,
+            updatedAt: new Date()
+        };
+        return await cartHelper.directUpdateObject(cart._id, updatedCart);
+    } else {
+        return await cartHelper.addObject(input);
+    }
 }
+
 
 export async function getCartDetailsHandler(input) {
     return await cartHelper.getObjectById(input);
