@@ -1,6 +1,6 @@
 {
   "name": "skywall-backend",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "An E-Commerce Website",
   "main": "src/server/index.js",
   "author": "Truwix",
