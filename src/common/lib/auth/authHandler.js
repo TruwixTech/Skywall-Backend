@@ -147,7 +147,7 @@ export async function verifyUserOtpHandler(email, otp) {
 
     return user;
   } catch (error) {
-    console.log("Error in verifyUserOtpHandler:", error);
+    console.error("Error in verifyUserOtpHandler:", error);
     throw error;
   }
 }
@@ -180,7 +180,7 @@ export async function getUserByEmailPasswordHandler(input) {
     delete user.password;
     return user;
   } catch (error) {
-    console.log("Error in getUserByEmailPasswordHandler:", error);
+    console.error("Error in getUserByEmailPasswordHandler:", error);
     throw error;
   }
 }

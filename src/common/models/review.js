@@ -7,14 +7,11 @@ const reviewSchema = new Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   rating: { type: Number, required: true, min: 1, max: 5 },
   comment: { type: String, trim: true },
+  isDeleted: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now }, 
   updatedAt: { type: Date, default: Date.now }
 });
 
-
-reviewSchema.pre("save", function (next) {
-  this.updatedAt = new Date();
-  next();
-});
+productSchema.set('versionKey', false);
 
 export default mongoose.model("Review", reviewSchema);

@@ -1,6 +1,6 @@
 {
   "name": "skywall-backend",
-  "version": "1.0.9",
+  "version": "1.0.13",
   "description": "An E-Commerce Website",
   "main": "src/server/index.js",
   "author": "Truwix",
@@ -15,6 +15,7 @@
     "lint": "eslint server"
   },
   "dependencies": {
+    "axios": "^1.8.1",
     "bcryptjs": "^3.0.2",
     "body-parser": "^1.20.3",
     "chalk": "^5.4.1",
@@ -31,6 +32,7 @@
     "multer": "^1.4.5-lts.1",
     "multer-storage-cloudinary": "^4.0.0",
     "nodemailer": "^6.10.0",
+    "pincode-distance": "^1.0.2",
     "pino": "^9.6.0",
     "pino-http": "^10.4.0",
     "replaceall": "^0.1.6",
