@@ -2,7 +2,6 @@ import cartHelper from '../../helpers/cart.helper';
 import productHelper from '../../helpers/product.helper';
 import userHelper from '../../helpers/user.helper';
 import Pincode from 'pincode-distance';
-import { getDistanceByPincode, getDistance} from '../shipping/shippingHandler';
 
 export async function addNewCartHandler(input) {
     const cart = await cartHelper.getObjectByQuery({ query: { user: input.user } });
