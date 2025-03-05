@@ -21,7 +21,7 @@ export async function addNewCartHandler(input) {
         });
 
         const updatedCart = {
-            ...cart._doc,
+            ...cart,
             items: updatedItems,
             updatedAt: new Date()
         };
@@ -54,51 +54,28 @@ export async function getCartByQueryHandler(input) {
     return await cartHelper.getObjectByQuery(input);
 }  
 
-export async function getCartTotalCostHandler(userId_input, pinCode, pinCodeTo) {
+export async function getCartTotalCostHandler(userId_input) {
     try {
-      const cart = await cartHelper.getObjectByQuery({ query: { user: userId_input } }).populate('items.product');
+      const cart = await cartHelper.getObjectByQuery({ query: { user: userId_input } });
       if (!cart) {
         return { success: false, error: "Cart not found" };
       }
-  
-      console.log("Cart Details:", JSON.stringify(cart, null, 2));
       const products = cart.items.map((item) => ({
         product: item.product._id,
         quantity: item.quantity,
       }));
-      console.log("Products:", JSON.stringify(products, null, 2));
-  
       let totalPrice = 0;
-      let shippingCost = 0;
-      const Pincode_ = new Pincode();
-      console.log("Flag 1");
-      const distance = Pincode_.getDistance(pinCode, pinCodeTo);
-      console.log("Flag 2");
-  
       for (let i = 0; i < products.length; i++) {
-        console.log("Product ID:", products[i].product);
-        const product = await productHelper.getObjectById(products[i].product);
+        const obj_Id = products[i].product;
+        const product = await productHelper.getObjectById(obj_Id);
         if (!product) {
           return { success: false, error: "Product not found" };
         }
         totalPrice += product.price * products[i].quantity;
       }
-  
-      console.log("Total Price Details:", totalPrice);
-      console.log("pinCode Details:", pinCode);
-      console.log("pinCodeTo Details:", pinCodeTo);
-  
-      const totalCost = {
-        totalCost: totalPrice,
-        shippingCost: shippingCost,
-        distance: distance,
-        productCost: totalPrice,
-        finalCost: totalPrice + shippingCost,
-      };
-  
-      return { success: true, data: totalCost };
+      return { success: true, data: totalPrice };
     } catch (error) {
       console.error(error);
       return { success: false, error: error.message };
     }
-  }
+}

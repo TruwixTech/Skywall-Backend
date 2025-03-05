@@ -228,7 +228,6 @@ export async function updateProductv2Handler(input) {
   if (!isNaN(new_price) && new_price !== null && new_price !== undefined) {
     input.updateObject.new_price = new_price;
   }
-  console.log("input :"+input.updateObject.name);
   // Perform the update operation
   return await productHelper.directUpdateObject(input.objectId, input.updateObject);
 }

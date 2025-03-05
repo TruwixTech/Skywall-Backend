@@ -162,8 +162,8 @@ router.route('/getTotalCost').post(async(req,res)=>{
     {
         if(!_.isEmpty(req.body))
         {
-            const {userId, pinCode, pinCodeTo} = req.body;
-            const totalCost = await getCartTotalCostHandler(userId, pinCode, pinCodeTo);
+            const {userId} = req.body;
+            const totalCost = await getCartTotalCostHandler(userId);
             res.status(responseStatus.STATUS_SUCCESS_OK);
             res.send({
                 status: responseData.SUCCESS,

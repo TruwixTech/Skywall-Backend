@@ -77,7 +77,7 @@ export async function verifyEmailOTP(email, otp) {
 
     return { success: true, message: "OTP verified successfully" };
   } catch (error) {
-    console.log("Error verifying email:", error);
+    console.error("Error verifying email:", error);
     throw error;
   }
 }
@@ -120,7 +120,7 @@ export async function sendVerificationEmail(email, subject) {
     await transporter.sendMail(mailOptions);
     return { success: true, message: "OTP sent successfully" };
   } catch (error) {
-    console.log("Error sending email:", error);
+    console.error("Error sending email:", error);
     throw error;
   }
 }
@@ -143,8 +143,7 @@ export async function sendEmailNotification(email, subject, message) {
     };
 
     await transporter.sendMail(mailOptions);
-    console.log("Email sent to:", email);
   } catch (error) {
-    console.log("Error sending email:", error);
+    console.error("Error sending email:", error);
   }
 }
