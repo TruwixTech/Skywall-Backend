@@ -181,7 +181,6 @@ router.route('/:id/update/v2').post(protectRoutes.verifyAdmin, upload.fields([{ 
       
         const files = req.files;
         const productData = req.body.product;
-        console.log("productData", productData);
         const updateObjectResult = await updateProductv2Handler({ objectId: req.params.id, updateObject: { ...productData, files } });
         res.status(responseStatus.STATUS_SUCCESS_OK);
         res.send({

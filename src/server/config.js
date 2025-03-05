@@ -12,7 +12,7 @@ JWT_SECRET: "5kYw@lL",
 EMAIL_USER:  `truwixtech@gmail.com`,
 
 EMAIL_PASS:  `bevputbfmnhmyowe`,
-
+GMAP_ID:'AIzaSyBfn4LBnnogivHwdsxAcqDTN8mmS_SFw4o',
 EMAIL_USER_OTP : ``,
 EMAIL_PASS_OTP : ``,
 };

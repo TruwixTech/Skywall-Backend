@@ -7,11 +7,13 @@ import {
     deleteCartHandler,
     getCartDetailsHandler,
     getCartListHandler,
-    updateCartDetailsHandler
+    updateCartDetailsHandler,
+    getCartTotalCostHandler
 } from '../../common/lib/cart/cartHandler';
 import responseStatus from "../../common/constants/responseStatus.json";
 import responseData from "../../common/constants/responseData.json";
 import protectRoutes from "../../common/util/protectRoutes";
+
 
 const router = new Router();
 
@@ -147,6 +149,33 @@ router.route('/:id/remove').post(protectRoutes.authenticateToken,async(req, res)
         }
     } catch (err) {
         console.log(err)
+        res.status(responseStatus.INTERNAL_SERVER_ERROR);
+        res.send({
+            status: responseData.ERROR,
+            data: { message: err }
+        });
+    }
+});
+
+router.route('/getTotalCost').post(async(req,res)=>{
+    try
+    {
+        if(!_.isEmpty(req.body))
+        {
+            const {userId, pinCode, pinCodeTo} = req.body;
+            const totalCost = await getCartTotalCostHandler(userId, pinCode, pinCodeTo);
+            res.status(responseStatus.STATUS_SUCCESS_OK);
+            res.send({
+                status: responseData.SUCCESS,
+                data: {
+                    totalCost: totalCost
+                }
+            });
+        }
+    }
+    catch(err)
+    {
+        console.log(err);
         res.status(responseStatus.INTERNAL_SERVER_ERROR);
         res.send({
             status: responseData.ERROR,

@@ -119,7 +119,7 @@ export async function updateProductv2Handler(input) {
   if (!existingProduct) {
     throw new Error("Product not found");
   }
-
+  
   // Handle specificationSchema
   if (input.updateObject.specificationSchema && typeof input.updateObject.specificationSchema === "string") {
     let parsedSpecs = JSON.parse(input.updateObject.specificationSchema);
@@ -193,7 +193,7 @@ export async function updateProductv2Handler(input) {
   if (!isNaN(new_price) && new_price !== null && new_price !== undefined) {
     input.updateObject.new_price = new_price;
   }
-
+  console.log("input :"+input.updateObject.name);
   // Perform the update operation
   return await productHelper.directUpdateObject(input.objectId, input.updateObject);
 }
