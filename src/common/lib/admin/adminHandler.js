@@ -59,7 +59,6 @@ export async function adminLoginHandler(input) {
     throw new Error("Admin not found");
   }
   const isMatch = await bcrypt.compare(input.password, admin.password);
-  console.log("IsMatch:"+isMatch);
   if (!isMatch) {
     throw new Error("Invalid credentials");
   }
