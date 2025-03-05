@@ -3,21 +3,9 @@ import productHelper from '../../helpers/product.helper';
 import userHelper from '../../helpers/user.helper';
 import Pincode from 'pincode-distance';
 import { getDistanceByPincode, getDistance} from '../shipping/shippingHandler';
-import { query } from 'express';
 
 export async function addNewCartHandler(input) {
-    const cart = await cartHelper.getObjectByQuery({ query: {user: input.user} });
-    if (cart) {
-        const updateCart = {
-            ...cart._doc,
-            items: [...cart.items, ...input.items],
-            updatedAt: new Date()
-        };
-        return await cartHelper.directUpdateObject(cart._id, updateCart);
-    }
-    else{
     return await cartHelper.addObject(input);
-    }
 }
 
 export async function getCartDetailsHandler(input) {
