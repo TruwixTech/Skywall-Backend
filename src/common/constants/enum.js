@@ -6,3 +6,7 @@ export const CANCELLED = "Cancelled";
 export const SUPERADMIN = "SuperAdmin";
 export const SUBADMIN = "SubAdmin";
 export const BUSINESS = "Business";
+const PAYMENT_PENDING = "pending";
+const PAYMENT_COMPLETED = "completed";
+const PAYMENT_FAILED = "failed";
+const INR = "INR";
