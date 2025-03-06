@@ -41,9 +41,15 @@ export async function updateCartDetailsHandler(input) {
 }
 
 export async function getCartListHandler(input) {
-  const list = await cartHelper.getAllObjects({
-    populatedQuery: 'items.product'
-  });
+  let filters = { ...input }
+  filters.populatedQuery = [
+    {
+      model: "Product",
+      path: "items.product",
+      select: {},
+    },
+  ];
+  const list = await cartHelper.getAllObjects(filters);
   const count = await cartHelper.getAllObjectCount(input);
   return { list, count };
 }
@@ -91,12 +97,12 @@ export async function getCartTotalCostHandler(userId_input) {
 export async function deleteSingleProductFromCartHandler(cartId, input) {
   try {
     const { productId } = input;
-  
+
     // Update the cart by removing the product from the `items` array
     await cartHelper.directUpdateObject(cartId, {
       $pull: { items: { product: productId } }
     })
-    
+
     return { success: true, data: "Product removed from cart successfully" };
 
   } catch (error) {
