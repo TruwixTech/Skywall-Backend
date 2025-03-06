@@ -8,7 +8,8 @@ import {
     getCartDetailsHandler,
     getCartListHandler,
     updateCartDetailsHandler,
-    getCartTotalCostHandler
+    getCartTotalCostHandler,
+    deleteSingleProductFromCartHandler
 } from '../../common/lib/cart/cartHandler';
 import responseStatus from "../../common/constants/responseStatus.json";
 import responseData from "../../common/constants/responseData.json";
@@ -142,6 +143,31 @@ router.route('/:id/remove').post(protectRoutes.authenticateToken,async(req, res)
                 status: responseData.SUCCESS,
                 data: {
                     hasCartDeleted: true
+                }
+            });
+        } else {
+            throw 'no id param sent'
+        }
+    } catch (err) {
+        console.log(err)
+        res.status(responseStatus.INTERNAL_SERVER_ERROR);
+        res.send({
+            status: responseData.ERROR,
+            data: { message: err }
+        });
+    }
+});
+
+//this route is for deleting a single product from cart
+router.route('/:id/remove-single-product').post(protectRoutes.authenticateToken,async(req, res) => {
+    try {
+        if (req.params.id && !_.isEmpty(req.body)) {
+            await deleteSingleProductFromCartHandler(req.params.id, req.body);
+            res.status(responseStatus.STATUS_SUCCESS_OK);
+            res.send({
+                status: responseData.SUCCESS,
+                data: {
+                    hasCartItemDeleted: true
                 }
             });
         } else {
