@@ -81,7 +81,7 @@ export async function getCartTotalCostHandler(userId_input) {
     return { success: true, data: totalPrice };
   } catch (error) {
     console.error("Error in getCartTotalCostHandler:", error);
-    return { success: false, error: error.message };
+    throw error;
   }
 }
 
@@ -99,6 +99,6 @@ export async function deleteSingleProductFromCartHandler(cartId, input) {
 
   } catch (error) {
     console.error("Error in deleteSingleProductFromCartHandler:", error);
-    return { success: false, error: error.message };
+    throw error;
   }
 }
