@@ -55,26 +55,31 @@ export async function getCartByQueryHandler(input) {
 
 export async function getCartTotalCostHandler(userId_input) {
     try {
-      const cart = await cartHelper.getObjectByQuery({ query: { user: userId_input } });
-      if (!cart) {
+      const carts = await cartHelper.getAllObjects({ 
+        query: { user: userId_input }, 
+        populatedQuery: 'items.product' 
+      });
+      
+      if (!carts || !Array.isArray(carts) || carts.length === 0) {
         return { success: false, error: "Cart not found" };
       }
-      const products = cart.items.map((item) => ({
-        product: item.product._id,
-        quantity: item.quantity,
-      }));
-      let totalPrice = 0;
-      for (let i = 0; i < products.length; i++) {
-        const obj_Id = products[i].product;
-        const product = await productHelper.getObjectById(obj_Id);
-        if (!product) {
-          return { success: false, error: "Product not found" };
-        }
-        totalPrice += product.price * products[i].quantity;
+
+      const cart = carts[0];
+      if (!cart.items || !Array.isArray(cart.items)) {
+        return { success: false, error: "Cart items not found" };
       }
+
+      let totalPrice = 0;
+      for (const item of cart.items) {
+        if (!item.product) {
+          continue;
+        }
+        totalPrice += item.product.price * item.quantity;
+      }
+      
       return { success: true, data: totalPrice };
     } catch (error) {
-      console.error(error);
+      console.error("Error in getCartTotalCostHandler:", error);
       return { success: false, error: error.message };
     }
-}
+  }
