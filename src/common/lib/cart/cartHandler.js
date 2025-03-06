@@ -91,8 +91,6 @@ export async function getCartTotalCostHandler(userId_input) {
 export async function deleteSingleProductFromCartHandler(cartId, input) {
   try {
     const { productId } = input;
-
-    console.log("productId", productId)
   
     // Update the cart by removing the product from the `items` array
     await cartHelper.directUpdateObject(cartId, {
@@ -105,8 +103,4 @@ export async function deleteSingleProductFromCartHandler(cartId, input) {
     console.error("Error in deleteSingleProductFromCartHandler:", error);
     return { success: false, error: error.message };
   }
-  // const updatedCart = await directUpdateObject(cartId, {
-  //   $pull: { items: { product: productId } }
-  // });
-
 }
