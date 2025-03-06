@@ -13,6 +13,7 @@ export async function addNewCartHandler(input) {
             if (existingItemIndex !== -1) {
                 // Update the quantity of the existing product
                 updatedItems[existingItemIndex].quantity += newItem.quantity;
+                updatedItems[existingItemIndex].warranty_months = newItem.warranty_months;
             } else {
                 // Add the new product to the cart
                 updatedItems.push(newItem);
@@ -40,7 +41,9 @@ export async function updateCartDetailsHandler(input) {
 }
 
 export async function getCartListHandler(input) {
-    const list = await cartHelper.getAllObjects(input);
+    const list = await cartHelper.getAllObjects({ 
+        populatedQuery: 'items.product' 
+      });
     const count = await cartHelper.getAllObjectCount(input);
     return { list, count };
 }
@@ -76,7 +79,7 @@ export async function getCartTotalCostHandler(userId_input) {
         }
         totalPrice += item.product.price * item.quantity;
       }
-      
+
       return { success: true, data: totalPrice };
     } catch (error) {
       console.error("Error in getCartTotalCostHandler:", error);
