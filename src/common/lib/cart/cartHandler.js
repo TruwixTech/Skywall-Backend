@@ -41,15 +41,7 @@ export async function updateCartDetailsHandler(input) {
 }
 
 export async function getCartListHandler(input) {
-  let filters = { ...input }
-  filters.populatedQuery = [
-    {
-      model: "Product",
-      path: "items.product",
-      select: {},
-    },
-  ];
-  const list = await cartHelper.getAllObjects(filters);
+  const list = await cartHelper.getAllObjects(input);
   const count = await cartHelper.getAllObjectCount(input);
   return { list, count };
 }

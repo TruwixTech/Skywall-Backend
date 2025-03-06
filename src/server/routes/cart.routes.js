@@ -37,6 +37,13 @@ router.route('/list').post(protectRoutes.authenticateToken,async (req, res) => {
       }
   
       filter.query = { ...filter.query };
+      filter.populatedQuery = [
+          {
+            model: "Product",
+            path: "items.product",
+            select: {},
+          },
+        ];
   
       const outputResult = await getCartListHandler(filter);
       res.status(responseStatus.STATUS_SUCCESS_OK);
