@@ -14,7 +14,7 @@ const paymentSchema = new Schema(
   {
     orderId: {
       type: Schema.Types.ObjectId,
-      ref:'Order',
+      ref: ORDER,
       required: true,
     },
     amount: {

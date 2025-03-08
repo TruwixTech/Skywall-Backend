@@ -9,6 +9,7 @@ export const CANCELLED = "Cancelled";
 
 export const PRODUCT = "Product";
 export const BUSINESS = "Business";
+export const ORDER = "Order";
 
 export const PAY_ONLINE = "Pay_online";
 export const CASH_ON_DELIVERY = "Cash_on_delivery"; 
