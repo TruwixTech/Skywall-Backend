@@ -3,8 +3,6 @@ import _ from "lodash";
 import nodemailer from "nodemailer";
 import configVariables from "../../server/config";
 import otpHelper from "../helpers/otp.helper";
-import hbs from 'nodemailer-handlebars';
-import path from 'path';
 
 export function sanitizeCountryCode(text) {
   if (text) {
