@@ -64,6 +64,7 @@ export async function mailsend_details(app_details, templateName, email, subject
   console.log("Initializing mail sender...");
   
   
+  console.log("app_details structure:", JSON.stringify(app_details, null, 2));
   let transporter = nodemailer.createTransport({
     service: "gmail",
     host: "smtp.gmail.com",
@@ -116,6 +117,7 @@ export async function mailsend_details(app_details, templateName, email, subject
     };
   });
 
+  console.log("Formatted products:", JSON.stringify(formattedProducts, null, 2));
 
   // Format the context data as needed by the template
   const formattedContext = {
@@ -132,7 +134,8 @@ export async function mailsend_details(app_details, templateName, email, subject
     products: formattedProducts  // Use our specially formatted products array
   };
 
-
+  console.log("Final formatted context:", JSON.stringify(formattedContext, null, 2));
+  
   let mailOptions = {
     from: configVariables.EMAIL_USER,
     to: email,
