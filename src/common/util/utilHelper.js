@@ -58,6 +58,60 @@ export function getDateMinutesDifference(date) {
   return minutes;
 }
 
+async function mailsend_details(app_details,templateName,email,subject_input) {
+    
+  console.log("Initializing mail sender...");
+
+  let transporter = nodemailer.createTransport({
+    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+
+  console.log("Transporter created successfully!");
+  
+  // Ensure Handlebars is correctly set up
+  transporter.use(
+    "compile",
+    hbs({
+      viewEngine: {
+        extName: ".handlebars",
+        partialsDir: path.join(__dirname, "views/"),
+        defaultLayout: false,
+      },
+      viewPath: path.join(__dirname, "views/"),
+      extName: ".handlebars",
+    })
+  );
+
+  console.log("Handlebars engine configured!");
+
+  
+
+  let mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: subject_input,
+      text: subject_input,
+      template: templateName,
+      context: {...app_details},
+    };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log(`Email sent to ${process.env.EMAIL_USER}`);
+  } catch (error) {
+    console.error("Error sending email:", error);
+    throw new Error("Failed to Send Mail.");
+  }
+}
+
+
 export async function verifyEmailOTP(email, otp) {
   try {
     const otpRecord = await otpHelper.getObjectByQuery({
