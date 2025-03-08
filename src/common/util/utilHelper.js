@@ -60,8 +60,11 @@ export function getDateMinutesDifference(date) {
   return minutes;
 }
 
-export async function mailsend_details(app_details, templateName, email, subject_input) {
-
+export async function mailsend_details(input) 
+{
+  try {
+  const {app_details, templateName, email, subject_input} = input;
+  
   let transporter = nodemailer.createTransport({
     service: "gmail",
     host: "smtp.gmail.com",
@@ -139,12 +142,12 @@ export async function mailsend_details(app_details, templateName, email, subject
     context: formattedContext,
   };
 
-  try {
+  
     const info = await transporter.sendMail(mailOptions);
     return { success: true, messageId: info.messageId };
   } catch (error) {
     console.error("Error sending email:", error);
-    throw new Error("Failed to Send Mail: " + error.message);
+    throw error;
   }
 }
 

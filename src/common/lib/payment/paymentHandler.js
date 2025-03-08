@@ -107,7 +107,13 @@ export async function verifyPayment(orderData) {
             
             let template = "order";
             let mail_subject = "Order Confirmation";
-            await mailsend_details(populatedOrder, template, email, mail_subject);
+            const input = {
+                populatedOrder,
+                template,
+                email,
+                mail_subject
+            }
+            await mailsend_details(input);
             return { success: true, message: 'Order and Payment created successfully' }
         } else {
             console.log("Payment Verification Failed")
