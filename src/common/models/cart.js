@@ -22,7 +22,6 @@ const cartSchema = new Schema(
           },
           warranty_months:{
             type: Number,
-            required: true,
             default: 0,
           }
         },
