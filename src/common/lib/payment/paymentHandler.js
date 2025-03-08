@@ -1,4 +1,5 @@
 import paymentHelper from '../../helpers/payment.helper';
+import OrderHelper from '../../helpers/order.helper';
 import Order from '../../models/order';
 import Payment from '../../models/payment';
 import { mailsend_details } from '../../util/utilHelper'
@@ -92,7 +93,8 @@ export async function verifyPayment(orderData) {
                 // also add expected delivery later
             }
 
-            const order = await Order.create(data)
+            const order = await OrderHelper.addObject(data);
+
 
             const paymentData = {
                 orderId: order._id,
@@ -101,13 +103,21 @@ export async function verifyPayment(orderData) {
                 userId
             }
 
-            const populatedOrder = await Order.findById(order._id).populate('products.product_id')
+            const populatedOrder = await OrderHelper.getObjectById({
+                id: order._id,
+                populatedQuery: "products.product_id"
+              });
+              
 
-            await Payment.create(paymentData)
+            await paymentHelper.addObject(paymentData);
+
             
             let template = "order";
             let mail_subject = "Order Confirmation";
-            await mailsend_details(populatedOrder, template, email, mail_subject);
+            let input = {
+                populatedOrder, template, email, mail_subject
+            };
+            await mailsend_details(input);
             return { success: true, message: 'Order and Payment created successfully' }
         } else {
             console.log("Payment Verification Failed")

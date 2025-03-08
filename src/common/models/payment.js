@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
-const {
+import {
   USER,
   PAYMENT_PENDING,
   PAYMENT_COMPLETED,
@@ -8,7 +8,7 @@ const {
   INR,
   PAY_ONLINE,
   CASH_ON_DELIVERY
-} = require("../constants/enum");
+} from "../constants/enum";
 
 const paymentSchema = new Schema(
   {
