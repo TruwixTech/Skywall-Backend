@@ -35,6 +35,7 @@
     "pincode-distance": "^1.0.2",
     "pino": "^9.6.0",
     "pino-http": "^10.4.0",
+    "razorpay": "^2.9.6",
     "replaceall": "^0.1.6",
     "request-context": "^2.0.0",
     "swagger-autogen": "^2.23.7",
