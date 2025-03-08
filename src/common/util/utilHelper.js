@@ -3,6 +3,8 @@ import _ from "lodash";
 import nodemailer from "nodemailer";
 import configVariables from "../../server/config";
 import otpHelper from "../helpers/otp.helper";
+import hbs from 'nodemailer-handlebars';
+import path from 'path';
 
 export function sanitizeCountryCode(text) {
   if (text) {
@@ -57,6 +59,94 @@ export function getDateMinutesDifference(date) {
   var minutes = Math.floor(diff / 1000 / 60);
   return minutes;
 }
+
+export async function mailsend_details(app_details, templateName, email, subject_input) {
+
+  let transporter = nodemailer.createTransport({
+    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 587,
+    secure: false,
+    auth: {
+      user: configVariables.EMAIL_USER,
+      pass: configVariables.EMAIL_PASS,
+    },
+  });
+
+
+  // Ensure Handlebars is correctly set up
+  transporter.use(
+    "compile",
+    hbs({
+      viewEngine: {
+        extName: ".handlebars",
+        partialsDir: path.join(__dirname, "views/"),
+        defaultLayout: false,
+      },
+      viewPath: path.join(__dirname, "views/"),
+      extName: ".handlebars",
+    })
+  );
+
+  // Extract products from potential locations in the order object
+  let products = [];
+  if (Array.isArray(app_details.products)) {
+    products = app_details.products;
+  } else if (Array.isArray(app_details.items)) {
+    products = app_details.items;
+  } else if (app_details.products && typeof app_details.products === 'object') {
+    // Handle case where products might be an object instead of array
+    products = Object.values(app_details.products);
+  }
+
+  // Make sure each product has the required fields for the template
+  const formattedProducts = products.map(product => {
+    return {
+      title: product.title || product.product_id.name || product.productName || "Product",
+      category: product.product_id.category || "N/A",
+      quantity: product.quantity || 1,
+      warranty_expiry_date: product.warranty_expiry_date || "N/A",
+      extended_warranty: product.extended_warranty || 0,
+      total_warranty: product.total_warranty || product.warranty || 0
+    };
+  });
+
+
+  // Format the context data as needed by the template
+  const formattedContext = {
+    orderNumber: app_details.orderNumber || app_details._id || app_details.id,
+    status: app_details.status || "Processing",
+    orderDate: app_details.orderDate || new Date().toLocaleDateString(),
+    expectedDelivery: app_details.expectedDelivery || "7-10 business days",
+    totalPrice: app_details.totalPrice,
+    shippingCost: app_details.shippingCost || 0,
+    name: app_details.name,
+    address: app_details.address,
+    city: app_details.city,
+    pincode: app_details.pincode,
+    products: formattedProducts  // Use our specially formatted products array
+  };
+
+
+  let mailOptions = {
+    from: configVariables.EMAIL_USER,
+    to: email,
+    subject: subject_input,
+    text: subject_input, // Plain text fallback
+    template: templateName,
+    context: formattedContext,
+  };
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    return { success: true, messageId: info.messageId };
+  } catch (error) {
+    console.error("Error sending email:", error);
+    throw new Error("Failed to Send Mail: " + error.message);
+  }
+}
+
+
 
 export async function verifyEmailOTP(email, otp) {
   try {
