@@ -1,5 +1,6 @@
 
 import mongoose from 'mongoose';
+import { USER,PRODUCT,PENDING,COMPLETED,CANCELLED } from '../constants/enum';
 const Schema = mongoose.Schema;
 
 const complaintSchema = new Schema({
@@ -20,6 +21,11 @@ const complaintSchema = new Schema({
     },
     description:{
         type:String
+    },
+    status:{
+        type:String,
+        enum:[PENDING,COMPLETED,CANCELLED],
+        default:PENDING
     },
     is_deleted: {
         type: Boolean,
