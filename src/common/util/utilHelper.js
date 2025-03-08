@@ -121,22 +121,14 @@ export async function mailsend_details(app_details, templateName, email, subject
   const formattedContext = {
     orderNumber: app_details.orderNumber || app_details._id || app_details.id,
     status: app_details.status || "Processing",
-    orderDate: app_details.orderDate || app_details.createdAt || new Date().toLocaleDateString(),
+    orderDate: app_details.orderDate || new Date().toLocaleDateString(),
     expectedDelivery: app_details.expectedDelivery || "7-10 business days",
-    totalPrice: app_details.totalPrice || app_details.total || app_details.amount || 0,
+    totalPrice: app_details.totalPrice,
     shippingCost: app_details.shippingCost || 0,
-    name: app_details.name || 
-          (app_details.shipping && app_details.shipping.name) || 
-          (app_details.customer && app_details.customer.name) || "Customer",
-    address: app_details.address || 
-            (app_details.shipping && app_details.shipping.address) || 
-            (app_details.shipping && app_details.shipping.streetAddress) || "Address",
-    city: app_details.city || 
-          (app_details.shipping && app_details.shipping.city) || "City",
-    pincode: app_details.pincode || 
-            app_details.zipcode || 
-            (app_details.shipping && app_details.shipping.pincode) || 
-            (app_details.shipping && app_details.shipping.zipcode) || "Pincode",
+    name: app_details.name,
+    address: app_details.address,
+    city: app_details.city,
+    pincode: app_details.pincode,
     products: formattedProducts  // Use our specially formatted products array
   };
 
