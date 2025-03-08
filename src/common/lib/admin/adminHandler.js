@@ -67,6 +67,12 @@ export async function adminLoginHandler(input) {
   return { admin: getAdminInfo(admin), token };
 }
 
+export async function updateReferralLevelHandler({ level, bonusAmount }) {
+  return await referralLevelHelper.directUpdateObject(
+    { level },
+    { bonusAmount }
+  );
+}
 
 export async function addNewAdminHandler(input) {
   return await adminHelper.addObject(input);
