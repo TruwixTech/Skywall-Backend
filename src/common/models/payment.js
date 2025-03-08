@@ -6,28 +6,21 @@ const {
   PAYMENT_COMPLETED,
   PAYMENT_FAILED,
   INR,
-  PAY_ONLINE,
-  CASH_ON_DELIVERY
-} = require("../constants/enum");
+} = require("../utils/enum");
 
 const paymentSchema = new Schema(
   {
     orderId: {
-      type: Schema.Types.ObjectId,
-      ref: 'Order',
+      type: String,
       required: true,
     },
     amount: {
       type: String,
       required: true,
     },
-    payment_method:{
-      type:String,
-      enum:[PAY_ONLINE,CASH_ON_DELIVERY],
-      default:PAY_ONLINE
-    },
     currency: {
       type: String,
+      required: true,
       default: INR,
     },
     status: {
@@ -37,7 +30,7 @@ const paymentSchema = new Schema(
     },
     userId: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: USER, // Assuming there is a User model
       required: true,
     },
   },
