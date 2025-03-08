@@ -15,7 +15,7 @@ const configVariables = {
   GMAP_ID: 'AIzaSyBfn4LBnnogivHwdsxAcqDTN8mmS_SFw4o',
   EMAIL_USER_OTP: ``,
   EMAIL_PASS_OTP: ``,
-  RAZORPAY_KEY_ID: '',
-  RAZORPAY_KEY_SECRET: ''
+  RAZORPAY_KEY_ID: 'rzp_test_m5TgogV8z5WjjW',
+  RAZORPAY_KEY_SECRET: 'PVA4mtD6aaULi7FnTPF8ZsNs'
 };
 export default configVariables;
