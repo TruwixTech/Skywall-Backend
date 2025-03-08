@@ -1,6 +1,6 @@
 
 import mongoose from 'mongoose';
-import { USER,PRODUCT,PENDING,COMPLETED,CANCELLED } from '../constants/enum';
+import { PENDING,COMPLETED,CANCELLED } from '../constants/enum';
 const Schema = mongoose.Schema;
 
 const complaintSchema = new Schema({
