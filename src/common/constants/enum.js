@@ -13,8 +13,8 @@ export const ORDER = "Order";
 
 export const PAY_ONLINE = "Pay_online";
 export const CASH_ON_DELIVERY = "Cash_on_delivery"; 
-const PAYMENT_PENDING = "Pending";
-const PAYMENT_COMPLETED = "Completed";
-const PAYMENT_FAILED = "Failed";
+export const PAYMENT_PENDING = "Pending";
+export const PAYMENT_COMPLETED = "Completed";
+export const PAYMENT_FAILED = "Failed";
 
 const INR = "INR";

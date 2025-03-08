@@ -40,6 +40,9 @@ const orderSchema = new Schema({
     shippingCost:{
         type:Number
     },
+    email:{
+        type:String
+    },
     pincode:{
         type:String,
         required:true,

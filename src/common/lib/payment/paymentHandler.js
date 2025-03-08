@@ -1,7 +1,10 @@
 import paymentHelper from '../../helpers/payment.helper';
-import order from '../../models/order';
+import Order from '../../models/order';
+import Payment from '../../models/payment';
 import {mailsend_details} from '../../util/utilHelper'
 import { mail } from '../auth/authHandler';
+import { PAYMENT_COMPLETED } from '../../constants/enum';
+
 export async function addNewPaymentHandler(input) {
     return await paymentHelper.addObject(input);
 }
@@ -20,25 +23,30 @@ export async function getPaymentListHandler(input) {
     return { list, count };
 }
 
-export async function checkPaymentCompletionHandler(paymentId)
+export async function processPaymentOrder(orderData,paymentData)
 {
     try {
-        const payment = await paymentHelper.getObjectById(paymentId);
-        const order = await order.getOrderById(payment.orderId);
-        if (!payment) {
-            return { success: false, message: 'Payment not found' };
-        }
-        if (payment.status === PAYMENT_COMPLETED) {
-            let template="order";
-            let mail_subject = "Order Confirmation";
-            const resp = await mailsend_details(order,template,order.name,mail_subject);
-            return { success: true, message: 'Payment is completed' };
-        } 
-        else {
-            return { success: false, message: 'Payment is not completed' };
-        }
+        //create order and payment objects and save them  
+        const order = new Order(orderData);
+        await order.save();
+        // Create and save the payment object
+        const payment = new Payment({
+            orderId: order._id,
+            amount: paymentData.amount,
+            payment_method: paymentData.payment_method,
+            currency: paymentData.currency,
+            status: PAYMENT_COMPLETED, 
+            userId: paymentData.userId,
+        });
+        await payment.save();
+
+        let template="order";
+        let mail_subject = "Order Confirmation";
+        const resp = await mailsend_details(order,template,order.email,mail_subject);
+        return { success: true, message: 'Order and Payment created successfully', data: resp };
+        
     } catch (error) {
-        return { success: false, message: 'Error checking payment status', error: error.message };
+        return { success: false, message: 'Error creating order and payment', error: error.message };
     }
 }
 
