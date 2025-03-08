@@ -6,6 +6,8 @@ export const SUPERADMIN = "SuperAdmin";
 export const PENDING = "Pending";
 export const COMPLETED = "Completed";
 export const CANCELLED = "Cancelled";
+export const IN_PROGRESS = "In Progress";
+export const RESOLVED = "Resolved";
 
 export const PRODUCT = "Product";
 export const BUSINESS = "Business";

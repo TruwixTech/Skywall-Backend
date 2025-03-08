@@ -1,6 +1,6 @@
 
 import mongoose from 'mongoose';
-import { PENDING,COMPLETED,CANCELLED } from '../constants/enum';
+import { PENDING,RESOLVED,IN_PROGRESS } from '../constants/enum';
 const Schema = mongoose.Schema;
 
 const complaintSchema = new Schema({
@@ -24,7 +24,7 @@ const complaintSchema = new Schema({
     },
     status:{
         type:String,
-        enum:[PENDING,COMPLETED,CANCELLED],
+        enum:[PENDING,IN_PROGRESS,RESOLVED],
         default:PENDING
     },
     is_deleted: {
