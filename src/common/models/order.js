@@ -1,33 +1,33 @@
 
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
-import { USER,PRODUCT,PENDING,COMPLETED,CANCELLED } from '../constants/enum';
+import { USER, PRODUCT, PENDING, COMPLETED, CANCELLED } from '../constants/enum';
 const orderSchema = new Schema({
     user_id: {
         type: Schema.Types.ObjectId,
         ref: USER
     },
-    products:[
+    products: [
         {
-        product_id: {
-            type: Schema.Types.ObjectId,
-            ref: PRODUCT
-        },
-        quantity: {
-            type: Number,
-            required: true,
-            min:1
-        },
-        warranty_expiry_date:{
-            type:Date
-       },
-       extended_warranty:{
-        type:Number
-    },
-       total_warranty:{
-        type:Number
-    },
-    }
+            product_id: {
+                type: Schema.Types.ObjectId,
+                ref: PRODUCT
+            },
+            quantity: {
+                type: Number,
+                required: true,
+                min: 1
+            },
+            warranty_expiry_date: {
+                type: Date
+            },
+            extended_warranty: {
+                type: Number
+            },
+            total_warranty: {
+                type: Number
+            },
+        }
     ],
     totalPrice: {
         type: Number,
@@ -37,38 +37,35 @@ const orderSchema = new Schema({
     shippingAddress: {
         type: String,
     },
-    shippingCost:{
-        type:Number
+    shippingCost: {
+        type: Number
     },
-    email:{
-        type:String
+    email: {
+        type: String
     },
-    pincode:{
-        type:String,
-        required:true,
-        maxlength:6,
-        minlength:6
+    pincode: {
+        type: String,
+        required: true,
+        maxlength: 6,
+        minlength: 6
     },
-    name:{
-        type:String,
+    name: {
+        type: String,
     },
-    address:{
-        type:String,
-    },
-    city:{
-        type:String
+    city: {
+        type: String
     },
     expectedDelivery: {
         type: Date,
     },
     status: {
         type: String,
-        enum: [PENDING,COMPLETED,CANCELLED],
+        enum: [PENDING, COMPLETED, CANCELLED],
         default: PENDING
     },
     is_deleted: {
         type: Boolean,
-        default: false 
+        default: false
     },
     created_at: {
         type: Date,

@@ -33,6 +33,13 @@ router.route('/list').post(async (req, res) => {
       }
   
       filter.query = { ...filter.query };
+      filter.populatedQuery = [
+        {
+            model: "Product",
+            path: "products.product_id",
+            select: {},
+        },
+    ];
   
       const outputResult = await getOrderListHandler(filter);
       res.status(responseStatus.STATUS_SUCCESS_OK);

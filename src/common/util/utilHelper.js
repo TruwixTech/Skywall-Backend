@@ -61,10 +61,7 @@ export function getDateMinutesDifference(date) {
 }
 
 export async function mailsend_details(app_details, templateName, email, subject_input) {
-  console.log("Initializing mail sender...");
-  
-  
-  console.log("app_details structure:", JSON.stringify(app_details, null, 2));
+
   let transporter = nodemailer.createTransport({
     service: "gmail",
     host: "smtp.gmail.com",
@@ -76,8 +73,7 @@ export async function mailsend_details(app_details, templateName, email, subject
     },
   });
 
-  console.log("Transporter created successfully!");
-  
+
   // Ensure Handlebars is correctly set up
   transporter.use(
     "compile",
@@ -91,8 +87,6 @@ export async function mailsend_details(app_details, templateName, email, subject
       extName: ".handlebars",
     })
   );
-
-  console.log("Handlebars engine configured!");
 
   // Extract products from potential locations in the order object
   let products = [];
@@ -108,8 +102,8 @@ export async function mailsend_details(app_details, templateName, email, subject
   // Make sure each product has the required fields for the template
   const formattedProducts = products.map(product => {
     return {
-      title: product.title || product.name || product.productName || "Product",
-      category: product.category || "N/A",
+      title: product.title || product.product_id.name || product.productName || "Product",
+      category: product.product_id.category || "N/A",
       quantity: product.quantity || 1,
       warranty_expiry_date: product.warranty_expiry_date || "N/A",
       extended_warranty: product.extended_warranty || 0,
@@ -153,6 +147,8 @@ export async function mailsend_details(app_details, templateName, email, subject
     throw new Error("Failed to Send Mail: " + error.message);
   }
 }
+
+
 
 export async function verifyEmailOTP(email, otp) {
   try {
