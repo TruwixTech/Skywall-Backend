@@ -8,10 +8,10 @@ const reviewSchema = new Schema({
   rating: { type: Number, required: true, min: 1, max: 5 },
   comment: { type: String, trim: true },
   isDeleted: { type: Boolean, default: false },
-  createdAt: { type: Date, default: Date.now }, 
+  createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });
 
-productSchema.set('versionKey', false);
+reviewSchema.set('versionKey', false);
 
 export default mongoose.model("Review", reviewSchema);
