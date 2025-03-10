@@ -16,6 +16,7 @@ import couponRoutes from './routes/coupon.routes.js';
 import otpRoutes from './routes/otp.routes.js';
 import cartRoutes from './routes/cart.routes.js';
 import paymentRoutes from './routes/payment.routes.js';
+import reviewRoutes from './routes/review.routes.js';
 
 import config from './config.js';
 import http from 'http';
@@ -88,6 +89,7 @@ app.use('/api/v1/coupon', couponRoutes);
 app.use('/api/v1/otp', otpRoutes);
 app.use('/api/v1/cart', cartRoutes);
 app.use('/api/v1/payment',paymentRoutes);
+app.use('/api/v1/review',reviewRoutes);
 
 app.use(
   '/api-docs',
