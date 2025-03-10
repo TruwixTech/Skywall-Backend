@@ -96,7 +96,7 @@ router.route('/create-coupon').post(protectRoutes.verifyAdmin,async (req, res) =
         res.status(responseStatus.INTERNAL_SERVER_ERROR);
         res.send({
             status: responseData.ERROR,
-            data: { message: err.message }
+            data: { message: err.message || err }
         });
     }
 });
@@ -116,7 +116,7 @@ router.route('/validate-coupon').post(async (req, res) => {
         res.status(responseStatus.INTERNAL_SERVER_ERROR);
         res.send({
             status: responseData.ERROR,
-            data: { message: err.message }
+            data: { message: err.message || err }
         });
     }
 });
