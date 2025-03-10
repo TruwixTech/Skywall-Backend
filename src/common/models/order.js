@@ -1,31 +1,34 @@
 
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
-import { PENDING,COMPLETED,CANCELLED } from '../constants/enum';
+import { USER, PRODUCT, PENDING, COMPLETED, CANCELLED } from '../constants/enum';
 const orderSchema = new Schema({
     user_id: {
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: USER
     },
-    products:[
+    products: [
         {
-        product_id: {
-            type: Schema.Types.ObjectId,
-            ref: 'Product'
-        },
-        quantity: {
-            type: Number,
-            required: true,
-            min:1
-        },
-        warranty_expiry_date:{
-            type:Date
-       }
-    }
+            product_id: {
+                type: Schema.Types.ObjectId,
+                ref: PRODUCT
+            },
+            quantity: {
+                type: Number,
+                required: true,
+                min: 1
+            },
+            warranty_expiry_date: {
+                type: Date
+            },
+            extended_warranty: {
+                type: Number
+            },
+            total_warranty: {
+                type: Number
+            },
+        }
     ],
-    quantity: {
-        type: Number
-    },
     totalPrice: {
         type: Number,
         required: true,
@@ -34,17 +37,35 @@ const orderSchema = new Schema({
     shippingAddress: {
         type: String,
     },
+    shippingCost: {
+        type: Number
+    },
+    email: {
+        type: String
+    },
+    pincode: {
+        type: String,
+        required: true,
+        maxlength: 6,
+        minlength: 6
+    },
+    name: {
+        type: String,
+    },
+    city: {
+        type: String
+    },
     expectedDelivery: {
         type: Date,
     },
     status: {
         type: String,
-        enum: [PENDING,COMPLETED,CANCELLED],
+        enum: [PENDING, COMPLETED, CANCELLED],
         default: PENDING
     },
     is_deleted: {
         type: Boolean,
-        default: false 
+        default: false
     },
     created_at: {
         type: Date,
