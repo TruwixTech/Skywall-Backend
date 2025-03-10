@@ -1,12 +1,11 @@
 import paymentHelper from '../../helpers/payment.helper';
-import Order from '../../models/order';
-import Payment from '../../models/payment';
 import { mailsend_details } from '../../util/utilHelper'
 import { COMPLETED, PAYMENT_COMPLETED } from '../../constants/enum';
 import { processPayment } from '../../../util/razorpay';
 import configVariables from '../../../server/config';
 import crypto from 'crypto'
 import moment from 'moment-timezone';
+import orderHelper from '../../helpers/order.helper';
 
 export async function addNewPaymentHandler(input) {
     return await processPayment(input.amount);
@@ -92,7 +91,7 @@ export async function verifyPayment(orderData) {
                 // also add expected delivery later
             }
 
-            const order = await Order.create(data)
+            const order = await orderHelper.addObject(data)
 
             const paymentData = {
                 orderId: order._id,
@@ -101,13 +100,30 @@ export async function verifyPayment(orderData) {
                 userId
             }
 
-            const populatedOrder = await Order.findById(order._id).populate('products.product_id')
+            // const populatedOrder = await Order.findById(order._id).populate('products.product_id')
+            let filter = {}
+            filter.id = order._id
+            filter.populatedQuery = [
+                {
+                    model: "Product",
+                    path: "products.product_id",
+                    select: {},
+                },
+            ]
+            const populatedOrder = await orderHelper.getObjectById(filter)
 
-            await Payment.create(paymentData)
-            
+            // await Payment.create(paymentData)
+            await paymentHelper.addObject(paymentData)
+
             let template = "order";
             let mail_subject = "Order Confirmation";
-            await mailsend_details(populatedOrder, template, email, mail_subject);
+            const input = {
+                app_details: populatedOrder,
+                templateName: template,
+                email,
+                subject_input: mail_subject
+            }
+            await mailsend_details(input);
             return { success: true, message: 'Order and Payment created successfully' }
         } else {
             console.log("Payment Verification Failed")
