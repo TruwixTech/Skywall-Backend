@@ -106,7 +106,7 @@ router.route('/list').post(async (req, res) => {
 
 router.route('/new').post(async (req, res) => {
     try {
-        console.log(req.body);
+        // console.log(req.body);
        if (!_.isEmpty(req.body)) {
             const outputResult = await addNewOtpHandler(req.body.otp);
             res.status(responseStatus.STATUS_SUCCESS_CREATED);
