@@ -15,23 +15,30 @@ const cartSchema = new Schema(
           ref: 'Product',
           required: true,
         },
-          quantity: {
-            type: Number,
-            required: true,
-            default: 1,
-          },
-          warranty_months:{
-            type: Number,
-            default: 0,
-          }
+        quantity: {
+          type: Number,
+          required: true,
+          default: 1,
         },
+        warranty_months: {
+          type: Number,
+          default: 0,
+        }
+      },
     ],
     is_deleted: {
       type: Boolean,
       default: false,
     },
+    created_at: {
+      type: Date,
+      default: Date.now,
+    },
+    updated_at: {
+      type: Date,
+      default: Date.now,
+    },
   },
-  { timestamps: true }
 );
 
 cartSchema.set('versionKey', false);

@@ -1,6 +1,6 @@
 
 import _ from 'lodash';
-import {Router} from 'express';
+import { Router } from 'express';
 
 import {
     addNewCartHandler,
@@ -18,56 +18,65 @@ import protectRoutes from "../../common/util/protectRoutes";
 
 const router = new Router();
 
-router.route('/list').post(protectRoutes.authenticateToken,async (req, res) => {
+router.route('/list').post(protectRoutes.authenticateToken, async (req, res) => {
     try {
-      let filter = {};
-      filter.query = {};
-  
-      const inputData = { ...req.body };
-      if (inputData) {
-        filter.pageNum = inputData.pageNum ? inputData.pageNum : 1;
-        filter.pageSize = inputData.pageSize ? inputData.pageSize : 50;
-  
-        if (inputData.filters) {
-          filter.query = inputData.filters;
+        let filter = {};
+        filter.query = {};
+
+        const inputData = { ...req.body };
+        if (inputData) {
+            filter.pageNum = inputData.pageNum ? inputData.pageNum : 1;
+            filter.pageSize = inputData.pageSize ? inputData.pageSize : 50;
+
+            if (inputData.filters) {
+                filter.query = inputData.filters;
+            }
+        } else {
+            filter.pageNum = 1;
+            filter.pageSize = 50;
         }
-      } else {
-        filter.pageNum = 1;
-        filter.pageSize = 50;
-      }
-  
-      filter.query = { ...filter.query };
-      filter.populatedQuery = [
-          {
-            model: "Product",
-            path: "items.product",
-            select: {},
-          },
+
+        filter.query = { ...filter.query };
+        filter.populatedQuery = [
+            {
+                model: "Product",
+                path: "items.product",
+                select: {},
+            },
+            {
+                model: "User",
+                path: "user",
+                select: {
+                    name: 1,
+                    address: 1,
+                    email: 1,
+                },
+            },
         ];
-  
-      const outputResult = await getCartListHandler(filter);
-      res.status(responseStatus.STATUS_SUCCESS_OK);
-      res.send({
-        status: responseData.SUCCESS,
-        data: {
-          cartList: outputResult.list ? outputResult.list : [],
-          cartCount: outputResult.count ? outputResult.count : 0,
-        },
-      });
+
+        const outputResult = await getCartListHandler(filter);
+        res.status(responseStatus.STATUS_SUCCESS_OK);
+        res.send({
+            status: responseData.SUCCESS,
+            data: {
+                cartList: outputResult.list ? outputResult.list : [],
+                cartCount: outputResult.count ? outputResult.count : 0,
+            },
+        });
     } catch (err) {
-      console.log(err);
-      res.status(responseStatus.INTERNAL_SERVER_ERROR);
-      res.send({
-        status: responseData.ERROR,
-        data: { message: err },
-      });
+        console.log(err);
+        res.status(responseStatus.INTERNAL_SERVER_ERROR);
+        res.send({
+            status: responseData.ERROR,
+            data: { message: err },
+        });
     }
-  });
+});
 
 
-router.route('/new').post(protectRoutes.authenticateToken,async (req, res) => {
+router.route('/new').post(protectRoutes.authenticateToken, async (req, res) => {
     try {
-       if (!_.isEmpty(req.body)) {
+        if (!_.isEmpty(req.body)) {
             const outputResult = await addNewCartHandler(req.body.cart);
             res.status(responseStatus.STATUS_SUCCESS_OK);
             res.send({
@@ -89,7 +98,7 @@ router.route('/new').post(protectRoutes.authenticateToken,async (req, res) => {
     }
 });
 
-router.route('/:id').get(protectRoutes.authenticateToken,async (req, res) => {
+router.route('/:id').get(protectRoutes.authenticateToken, async (req, res) => {
     try {
         if (req.params.id) {
             const gotCart = await getCartDetailsHandler(req.params);
@@ -113,7 +122,7 @@ router.route('/:id').get(protectRoutes.authenticateToken,async (req, res) => {
     }
 });
 
-router.route('/:id/update').post(protectRoutes.authenticateToken,async (req, res) => {
+router.route('/:id/update').post(protectRoutes.authenticateToken, async (req, res) => {
     try {
         if (!_.isEmpty(req.params.id) && !_.isEmpty(req.body) && !_.isEmpty(req.body.cart)) {
             let input = {
@@ -122,12 +131,12 @@ router.route('/:id/update').post(protectRoutes.authenticateToken,async (req, res
             }
             const updateObjectResult = await updateCartDetailsHandler(input);
             res.status(responseStatus.STATUS_SUCCESS_OK);
-                res.send({
-                    status: responseData.SUCCESS,
-                    data: {
-                        cart: updateObjectResult ? updateObjectResult : {}
-                    }
-                });
+            res.send({
+                status: responseData.SUCCESS,
+                data: {
+                    cart: updateObjectResult ? updateObjectResult : {}
+                }
+            });
         } else {
             throw 'no body or id param sent'
         }
@@ -141,7 +150,7 @@ router.route('/:id/update').post(protectRoutes.authenticateToken,async (req, res
     }
 });
 
-router.route('/:id/remove').post(protectRoutes.authenticateToken,async(req, res) => {
+router.route('/:id/remove').post(protectRoutes.authenticateToken, async (req, res) => {
     try {
         if (req.params.id) {
             const deletedCart = await deleteCartHandler(req.params.id);
@@ -166,7 +175,7 @@ router.route('/:id/remove').post(protectRoutes.authenticateToken,async(req, res)
 });
 
 //this route is for deleting a single product from cart
-router.route('/:id/remove-single-product').post(protectRoutes.authenticateToken,async(req, res) => {
+router.route('/:id/remove-single-product').post(protectRoutes.authenticateToken, async (req, res) => {
     try {
         if (req.params.id && !_.isEmpty(req.body)) {
             await deleteSingleProductFromCartHandler(req.params.id, req.body);
@@ -190,12 +199,10 @@ router.route('/:id/remove-single-product').post(protectRoutes.authenticateToken,
     }
 });
 
-router.route('/getTotalCost').post(async(req,res)=>{
-    try
-    {
-        if(!_.isEmpty(req.body))
-        {
-            const {userId} = req.body;
+router.route('/getTotalCost').post(async (req, res) => {
+    try {
+        if (!_.isEmpty(req.body)) {
+            const { userId } = req.body;
             const totalCost = await getCartTotalCostHandler(userId);
             res.status(responseStatus.STATUS_SUCCESS_OK);
             res.send({
@@ -206,8 +213,7 @@ router.route('/getTotalCost').post(async(req,res)=>{
             });
         }
     }
-    catch(err)
-    {
+    catch (err) {
         console.log(err);
         res.status(responseStatus.INTERNAL_SERVER_ERROR);
         res.send({
@@ -218,4 +224,4 @@ router.route('/getTotalCost').post(async(req,res)=>{
 });
 
 export default router;
-  
+

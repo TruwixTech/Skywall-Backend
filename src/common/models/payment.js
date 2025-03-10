@@ -1,42 +1,59 @@
-import mongoose from "mongoose";
-const Schema = mongoose.Schema;
-const {
-  USER,
-  PAYMENT_PENDING,
-  PAYMENT_COMPLETED,
-  PAYMENT_FAILED,
-  INR,
-} = require("../utils/enum");
 
-const paymentSchema = new Schema(
-  {
+import mongoose from 'mongoose';
+const Schema = mongoose.Schema;
+import {
+    USER,
+    PAYMENT_PENDING,
+    PAYMENT_COMPLETED,
+    PAYMENT_FAILED,
+    INR,
+    PAY_ONLINE,
+    CASH_ON_DELIVERY
+} from "../constants/enum";
+
+const paymentSchema = new Schema({
     orderId: {
-      type: String,
-      required: true,
+        type: Schema.Types.ObjectId,
+        ref: 'Order',
+        required: true,
     },
     amount: {
-      type: String,
-      required: true,
+        type: String,
+        required: true,
+    },
+    payment_method: {
+        type: String,
+        enum: [PAY_ONLINE, CASH_ON_DELIVERY],
+        default: PAY_ONLINE
     },
     currency: {
-      type: String,
-      required: true,
-      default: INR,
+        type: String,
+        default: INR,
     },
     status: {
-      type: String,
-      enum: [PAYMENT_PENDING, PAYMENT_COMPLETED, PAYMENT_FAILED],
-      default: PAYMENT_PENDING,
+        type: String,
+        enum: [PAYMENT_PENDING, PAYMENT_COMPLETED, PAYMENT_FAILED],
+        default: PAYMENT_PENDING,
     },
     userId: {
-      type: Schema.Types.ObjectId,
-      ref: USER, // Assuming there is a User model
-      required: true,
+        type: Schema.Types.ObjectId,
+        ref: USER,
+        required: true,
     },
-  },
-  { timestamps: true }
-);
+    is_deleted: {
+        type: Boolean,
+        default: false
+    },
+    created_at: {
+        type: Date,
+        default: Date.now
+    },
+    updated_at: {
+        type: Date,
+        default: Date.now
+    }
+});
 
-const Payment = mongoose.model("Payment", paymentSchema);
+paymentSchema.set('versionKey', false);
 
-module.exports = Payment;
+export default mongoose.model('Payment', paymentSchema);
