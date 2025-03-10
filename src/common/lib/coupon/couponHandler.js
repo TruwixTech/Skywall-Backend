@@ -23,7 +23,12 @@ export async function deleteCouponHandler(input) {
 }
 
 export async function getCouponByQueryHandler(input) {
-    return await couponHelper.getObjectByQuery(input);
+    const {code} = input;
+    const existingCoupon = await couponHelper.getObjectByQuery({ query: { code } });
+    if (!existingCoupon) {
+        throw new Error('Coupon not Valid');
+    }
+    return existingCoupon;
 }  
 
 export async function createCouponHandler(input) {
@@ -32,6 +37,5 @@ export async function createCouponHandler(input) {
     if (existingCoupon) {
         throw new Error('Coupon with this code already exists');
     }
-
     return await couponHelper.addObject(input);
 }
