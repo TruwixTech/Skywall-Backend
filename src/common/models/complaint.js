@@ -1,6 +1,6 @@
 
 import mongoose from 'mongoose';
-import { PENDING,RESOLVED,IN_PROGRESS, USER } from '../constants/enum';
+import { PENDING, RESOLVED, IN_PROGRESS, USER } from '../constants/enum';
 const Schema = mongoose.Schema;
 
 const complaintSchema = new Schema({
@@ -26,14 +26,17 @@ const complaintSchema = new Schema({
     description: {
         type: String
     },
+    customIssueType: {
+        type: String
+    },
     status: {
         type: String,
-        enum:[PENDING,IN_PROGRESS,RESOLVED],
-        default:PENDING
+        enum: [PENDING, IN_PROGRESS, RESOLVED],
+        default: PENDING
     },
     is_deleted: {
         type: Boolean,
-        default: false 
+        default: false
     },
     created_at: {
         type: Date,
