@@ -2,7 +2,7 @@ import { ADMIN } from "../../constants/enum";
 import adminHelper from "../../helpers/admin.helper";
 import { generateToken } from "../../util/authUtil";
 import bcrypt from "bcryptjs";
-import { getAdminInfo } from "../../util/utilHelper";
+import { getAdminInfo, mailsend_contact_details } from "../../util/utilHelper";
 import userHelper from '../../helpers/user.helper';
 import orderHelper from '../../helpers/order.helper';
 import productHelper from "../../helpers/product.helper";
@@ -30,6 +30,33 @@ export async function adminSignupHandler(input) {
   const token = generateToken(newAdmin._id, newAdmin.role);
 
   return { admin: getAdminInfo(newAdmin), token };
+}
+
+export async function contactusHandler(input) {
+  try { 
+      const contact_us_details = {
+          name: input.name,
+          email: input.email,
+          phone: input.phone,
+          message: input.message,
+          subject: input.subject
+      };
+
+      let template = "contactus";
+      let mail_subject = "New Query from Skywall";
+      const mailInput = {
+          app_details: contact_us_details,
+          templateName: template,
+          subject_input: mail_subject
+      };
+      
+      await mailsend_contact_details(mailInput);
+      return { success: true, message: 'Contact Us Mail Sent successfully' };
+      
+  } catch (error) {
+      console.error("Error in contactusHandler:", error);
+      throw error;
+  }
 }
 
 export async function getDashboardData(input) {

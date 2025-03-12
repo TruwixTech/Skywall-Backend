@@ -146,7 +146,65 @@ export async function mailsend_details(input) {
  }
 }
 
+export async function mailsend_contact_details(input) {
+  try {
+      
+     const { app_details, templateName, subject_input } = input;
 
+      if (!app_details) {
+          throw new Error("App details are missing in input.");
+      }
+
+      let transporter = nodemailer.createTransport({
+          service: "gmail",
+          host: "smtp.gmail.com",
+          port: 587,
+          secure: false,
+          auth: {
+              user: configVariables.EMAIL_USER,
+              pass: configVariables.EMAIL_PASS,
+          },
+      });
+      
+     transporter.use(
+          "compile",
+          hbs({
+              viewEngine: {
+                  extName: ".handlebars",
+                  partialsDir: path.join(__dirname, "views/"),
+                  defaultLayout: false,
+              },
+              viewPath: path.join(__dirname, "views/"),
+              extName: ".handlebars",
+          })
+      );
+      
+     const context_input = {
+          name: app_details.name,
+          email: app_details.email,
+          phone: app_details.phone,
+          subject: app_details.subject,
+          message: app_details.message,
+      };
+      
+
+      let mailOptions = {
+          from: configVariables.EMAIL_USER,
+          to: configVariables.EMAIL_USER,
+          subject: subject_input,
+          text: subject_input, // Plain text fallback
+          template: templateName,
+          context: context_input,
+      };
+      
+
+      const info = await transporter.sendMail(mailOptions);
+      return { success: true, messageId: info.messageId };
+  } catch (error) {
+      console.error("Error sending email:", error);
+      throw error;
+  }
+}
 
 export async function verifyEmailOTP(email, otp) {
   try {
