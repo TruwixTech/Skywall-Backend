@@ -65,9 +65,6 @@ export async function mailsend_details(input) {
    const { app_details, templateName, email, subject_input } = input
    let transporter = nodemailer.createTransport({
      service: "gmail",
-     host: "smtp.gmail.com",
-     port: 587,
-     secure: false,
      auth: {
        user: configVariables.EMAIL_USER,
        pass: configVariables.EMAIL_PASS,
@@ -157,9 +154,6 @@ export async function mailsend_contact_details(input) {
 
       let transporter = nodemailer.createTransport({
           service: "gmail",
-          host: "smtp.gmail.com",
-          port: 587,
-          secure: false,
           auth: {
               user: configVariables.EMAIL_USER,
               pass: configVariables.EMAIL_PASS,
