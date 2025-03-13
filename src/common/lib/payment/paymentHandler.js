@@ -1,6 +1,6 @@
 import paymentHelper from '../../helpers/payment.helper';
 import { mailsend_details } from '../../util/utilHelper'
-import { COMPLETED, PAYMENT_COMPLETED } from '../../constants/enum';
+import { PAYMENT_COMPLETED, PENDING } from '../../constants/enum';
 import { processPayment } from '../../../util/razorpay';
 import configVariables from '../../../server/config';
 import crypto from 'crypto'
@@ -86,7 +86,7 @@ export async function verifyPayment(orderData) {
                 pincode: zip,
                 name,
                 city,
-                status: COMPLETED,
+                status: PENDING,
                 products
                 // also add expected delivery later
             }

@@ -4,7 +4,8 @@ export const SUBADMIN = "SubAdmin";
 export const SUPERADMIN = "SuperAdmin";
 
 export const PENDING = "Pending";
-export const COMPLETED = "Completed";
+export const SHIPPED = "Shipped";
+export const DELIVERED = "Delivered";
 export const CANCELLED = "Cancelled";
 export const RESOLVED = "Resolved";
 export const IN_PROGRESS = "In_progress";
