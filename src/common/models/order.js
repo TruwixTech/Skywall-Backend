@@ -1,7 +1,7 @@
 
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
-import { USER, PRODUCT, PENDING, COMPLETED, CANCELLED } from '../constants/enum';
+import { USER, PRODUCT, PENDING, COMPLETED, CANCELLED, SHIPPED, DELIVERED } from '../constants/enum';
 const orderSchema = new Schema({
     user_id: {
         type: Schema.Types.ObjectId,
@@ -60,7 +60,7 @@ const orderSchema = new Schema({
     },
     status: {
         type: String,
-        enum: [PENDING, COMPLETED, CANCELLED],
+        enum: [PENDING, SHIPPED, DELIVERED, CANCELLED],
         default: PENDING
     },
     is_deleted: {

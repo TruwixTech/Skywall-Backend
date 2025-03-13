@@ -102,3 +102,34 @@ export async function deleteSingleProductFromCartHandler(cartId, input) {
     throw error;
   }
 }
+
+export async function updateCartQuantityHandler(input) {
+  try {
+    const { objectId, updateObject } = input;
+
+    if (!updateObject.productId || updateObject.quantity === undefined) {
+      throw "Product ID and quantity are required"
+    }
+
+    // Get the existing cart
+    const cart = await cartHelper.getObjectByQuery({ query: { _id: objectId } });
+
+    if (!cart) {
+      throw "Cart not found"
+    }
+
+    // Find the item in the cart and update its quantity
+    const itemIndex = cart.items.findIndex(item => item.product.toString() === updateObject.productId);
+    if (itemIndex === -1) {
+      throw "Product not found in cart"
+    }
+
+    cart.items[itemIndex].quantity = updateObject.quantity;
+
+    // Update the cart using your existing method
+    return await cartHelper.updateObjectByQuery({ _id: objectId }, cart);
+  } catch (error) {
+    console.error("Error in updateCartQuantityHandler:", error);
+    throw error;
+  }
+}
