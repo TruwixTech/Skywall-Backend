@@ -9,7 +9,8 @@ import {
     getAdminDetailsHandler,
     getAdminListHandler,
     updateAdminDetailsHandler,
-    getDashboardData
+    getDashboardData,
+    contactusHandler
 } from '../../common/lib/admin/adminHandler';
 import responseStatus from "../../common/constants/responseStatus.json";
 import responseData from "../../common/constants/responseData.json";
@@ -42,6 +43,25 @@ router.route('/signup').post(async (req, res) => {
     }
 });
 
+router.route('/contact-us').post(async (req, res) => {
+    try {
+        if (!_.isEmpty(req.body)) {
+            const send_mail = await contactusHandler(req.body);
+            res.status(responseStatus.STATUS_SUCCESS_OK).json({
+                status: responseData.SUCCESS,
+                data: { send_mail }
+            });
+        } else {
+            throw new Error("Failed Sending Contact-Us Mail");
+        }
+    } catch (err) {
+        console.error("Error in router:", err);
+        res.status(responseStatus.INTERNAL_SERVER_ERROR).json({
+            status: responseData.ERROR,
+            data: { message: err.message }
+        });
+    }
+});
 
 router.route("/login").post(async (req, res) => {
     try {
