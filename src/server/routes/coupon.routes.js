@@ -8,7 +8,8 @@ import {
     getCouponDetailsHandler,
     getCouponListHandler,
     updateCouponDetailsHandler,
-    createCouponHandler
+    createCouponHandler,
+    getCouponByQueryHandler
 } from '../../common/lib/coupon/couponHandler';
 import responseStatus from "../../common/constants/responseStatus.json";
 import responseData from "../../common/constants/responseData.json";
@@ -95,7 +96,27 @@ router.route('/create-coupon').post(protectRoutes.verifyAdmin,async (req, res) =
         res.status(responseStatus.INTERNAL_SERVER_ERROR);
         res.send({
             status: responseData.ERROR,
-            data: { message: err.message }
+            data: { message: err.message || err }
+        });
+    }
+});
+
+router.route('/validate-coupon').post(async (req, res) => {
+    try {
+        const outputResult = await getCouponByQueryHandler(req.body);
+        res.status(responseStatus.STATUS_SUCCESS_OK);
+        res.send({
+            status: responseData.SUCCESS,
+            data: {
+                coupon: outputResult ? outputResult : {}
+            }
+        });
+    } catch (err) {
+        console.log(err);
+        res.status(responseStatus.INTERNAL_SERVER_ERROR);
+        res.send({
+            status: responseData.ERROR,
+            data: { message: err.message || err }
         });
     }
 });

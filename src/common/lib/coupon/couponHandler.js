@@ -23,15 +23,29 @@ export async function deleteCouponHandler(input) {
 }
 
 export async function getCouponByQueryHandler(input) {
-    return await couponHelper.getObjectByQuery(input);
+   try {
+     const {code} = input;
+     const existingCoupon = await couponHelper.getObjectByQuery({ query: { code } });
+     if (!existingCoupon) {
+         throw 'Coupon not Valid'
+     }
+     return existingCoupon;
+   } catch (error) {
+    console.log(error);
+    throw error
+   }
 }  
 
 export async function createCouponHandler(input) {
-    const {code} = input;
-    const existingCoupon = await couponHelper.getObjectByQuery({ query: { code } });
-    if (existingCoupon) {
-        throw new Error('Coupon with this code already exists');
+    try {
+        const {code} = input;
+        const existingCoupon = await couponHelper.getObjectByQuery({ query: { code } });
+        if (existingCoupon) {
+            throw 'Coupon with this code already exists'
+        }
+        return await couponHelper.addObject(input);
+    } catch (error) {
+        console.log(error)
+        throw error
     }
-
-    return await couponHelper.addObject(input);
 }

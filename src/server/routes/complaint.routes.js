@@ -3,15 +3,15 @@ import _ from 'lodash';
 import { Router } from 'express';
 
 import {
-    addNewOrderHandler,
-    deleteOrderHandler,
-    getOrderDetailsHandler,
-    getOrderListHandler,
-    updateOrderDetailsHandler
-} from '../../common/lib/order/orderHandler';
+    addNewComplaintHandler,
+    deleteComplaintHandler,
+    getComplaintDetailsHandler,
+    getComplaintListHandler,
+    updateComplaintDetailsHandler
+} from '../../common/lib/complaint/complaintHandler';
 import responseStatus from "../../common/constants/responseStatus.json";
 import responseData from "../../common/constants/responseData.json";
-import protectRoutes from "../../common/util/protectRoutes";
+import protectRoutes from '../../common/util/protectRoutes';
 
 const router = new Router();
 
@@ -34,21 +34,14 @@ router.route('/list').post(async (req, res) => {
         }
 
         filter.query = { ...filter.query };
-        filter.populatedQuery = [
-            {
-                model: "Product",
-                path: "products.product_id",
-                select: {},
-            },
-        ];
 
-        const outputResult = await getOrderListHandler(filter);
+        const outputResult = await getComplaintListHandler(filter);
         res.status(responseStatus.STATUS_SUCCESS_OK);
         res.send({
             status: responseData.SUCCESS,
             data: {
-                orderList: outputResult.list ? outputResult.list : [],
-                orderCount: outputResult.count ? outputResult.count : 0,
+                complaintList: outputResult.list ? outputResult.list : [],
+                complaintCount: outputResult.count ? outputResult.count : 0,
             },
         });
     } catch (err) {
@@ -65,12 +58,12 @@ router.route('/list').post(async (req, res) => {
 router.route('/new').post(async (req, res) => {
     try {
         if (!_.isEmpty(req.body)) {
-            const outputResult = await addNewOrderHandler(req.body.order);
+            const outputResult = await addNewComplaintHandler(req.body);
             res.status(responseStatus.STATUS_SUCCESS_OK);
             res.send({
                 status: responseData.SUCCESS,
                 data: {
-                    order: outputResult ? outputResult : {}
+                    complaint: outputResult ? outputResult : {}
                 }
             });
         } else {
@@ -89,12 +82,12 @@ router.route('/new').post(async (req, res) => {
 router.route('/:id').get(async (req, res) => {
     try {
         if (req.params.id) {
-            const gotOrder = await getOrderDetailsHandler(req.params);
+            const gotComplaint = await getComplaintDetailsHandler(req.params);
             res.status(responseStatus.STATUS_SUCCESS_OK);
             res.send({
                 status: responseData.SUCCESS,
                 data: {
-                    order: gotOrder ? gotOrder : {}
+                    complaint: gotComplaint ? gotComplaint : {}
                 }
             });
         } else {
@@ -110,19 +103,19 @@ router.route('/:id').get(async (req, res) => {
     }
 });
 
-router.route('/:id/update').post( async (req, res) => {
+router.route('/:id/update').post(protectRoutes.verifyAdmin, async (req, res) => {
     try {
         if (!_.isEmpty(req.params.id) && !_.isEmpty(req.body)) {
             let input = {
                 objectId: req.params.id,
                 updateObject: req.body
             }
-            const updateObjectResult = await updateOrderDetailsHandler(input);
+            const updateObjectResult = await updateComplaintDetailsHandler(input);
             res.status(responseStatus.STATUS_SUCCESS_OK);
             res.send({
                 status: responseData.SUCCESS,
                 data: {
-                    order: updateObjectResult ? updateObjectResult : {}
+                    complaint: updateObjectResult ? updateObjectResult : {}
                 }
             });
         } else {
@@ -141,12 +134,12 @@ router.route('/:id/update').post( async (req, res) => {
 router.route('/:id/remove').post(async (req, res) => {
     try {
         if (req.params.id) {
-            const deletedOrder = await deleteOrderHandler(req.params.id);
+            const deletedComplaint = await deleteComplaintHandler(req.params.id);
             res.status(responseStatus.STATUS_SUCCESS_OK);
             res.send({
                 status: responseData.SUCCESS,
                 data: {
-                    hasOrderDeleted: true
+                    hasComplaintDeleted: true
                 }
             });
         } else {

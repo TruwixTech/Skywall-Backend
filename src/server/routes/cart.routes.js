@@ -9,7 +9,8 @@ import {
     getCartListHandler,
     updateCartDetailsHandler,
     getCartTotalCostHandler,
-    deleteSingleProductFromCartHandler
+    deleteSingleProductFromCartHandler,
+    updateCartQuantityHandler
 } from '../../common/lib/cart/cartHandler';
 import responseStatus from "../../common/constants/responseStatus.json";
 import responseData from "../../common/constants/responseData.json";
@@ -141,7 +142,63 @@ router.route('/:id/update').post(protectRoutes.authenticateToken,async (req, res
     }
 });
 
-router.route('/:id/remove').post(protectRoutes.authenticateToken,async(req, res) => {
+router.route('/:id/update-quantity').post(protectRoutes.authenticateToken, async (req, res) => {
+    try {
+        if (!_.isEmpty(req.params.id) && !_.isEmpty(req.body) && !_.isEmpty(req.body.cart)) {
+            let input = {
+                objectId: req.params.id,
+                updateObject: req.body.cart
+            }
+            const updateObjectResult = await updateCartQuantityHandler(input);
+            res.status(responseStatus.STATUS_SUCCESS_OK);
+            res.send({
+                status: responseData.SUCCESS,
+                data: {
+                    cart: updateObjectResult ? updateObjectResult : {}
+                }
+            });
+        } else {
+            throw 'no body or id param sent'
+        }
+    } catch (err) {
+        console.log(err)
+        res.status(responseStatus.INTERNAL_SERVER_ERROR);
+        res.send({
+            status: responseData.ERROR,
+            data: { message: err }
+        });
+    }
+});
+
+router.route('/:id/update-quantity').post(protectRoutes.authenticateToken, async (req, res) => {
+    try {
+        if (!_.isEmpty(req.params.id) && !_.isEmpty(req.body) && !_.isEmpty(req.body.cart)) {
+            let input = {
+                objectId: req.params.id,
+                updateObject: req.body.cart
+            }
+            const updateObjectResult = await updateCartQuantityHandler(input);
+            res.status(responseStatus.STATUS_SUCCESS_OK);
+            res.send({
+                status: responseData.SUCCESS,
+                data: {
+                    cart: updateObjectResult ? updateObjectResult : {}
+                }
+            });
+        } else {
+            throw 'no body or id param sent'
+        }
+    } catch (err) {
+        console.log(err)
+        res.status(responseStatus.INTERNAL_SERVER_ERROR);
+        res.send({
+            status: responseData.ERROR,
+            data: { message: err }
+        });
+    }
+});
+
+router.route('/:id/remove').post(protectRoutes.authenticateToken, async (req, res) => {
     try {
         if (req.params.id) {
             const deletedCart = await deleteCartHandler(req.params.id);
