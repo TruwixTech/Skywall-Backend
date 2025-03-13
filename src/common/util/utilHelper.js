@@ -149,7 +149,7 @@ export async function mailsend_contact_details(input) {
      const { app_details, templateName, subject_input } = input;
 
       if (!app_details) {
-          throw new Error("App details are missing in input.");
+          throw "App details are missing in input."
       }
 
       let transporter = nodemailer.createTransport({

@@ -6,6 +6,7 @@ import configVariables from '../../../server/config';
 import crypto from 'crypto'
 import moment from 'moment-timezone';
 import orderHelper from '../../helpers/order.helper';
+import productHelper from '../../helpers/product.helper';
 
 export async function addNewPaymentHandler(input) {
     return await processPayment(input.amount);
@@ -90,6 +91,14 @@ export async function verifyPayment(orderData) {
                 products
                 // also add expected delivery later
             }
+
+            // // ✅ Reduce stock for each product
+            // for (const item of products) {
+            //     await productHelper.updateObjectByQuery(
+            //         { _id: item.product_id }, // Query to find the product
+            //         { $inc: { stock: -item.quantity } } // Subtract quantity from stock
+            //     );
+            // }
 
             const order = await orderHelper.addObject(data)
 

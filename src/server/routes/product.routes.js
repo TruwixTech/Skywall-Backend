@@ -40,7 +40,6 @@ router.route('/list').post(async (req, res) => {
         }
 
         filter.query = { ...filter.query };
-
         const outputResult = await getProductListHandler(filter);
         res.status(responseStatus.STATUS_SUCCESS_OK);
         res.send({
@@ -178,27 +177,27 @@ router.route('/:id/update').post(protectRoutes.verifyAdmin, async (req, res) => 
 
 router.route('/:id/update/v2').post(protectRoutes.verifyAdmin, upload.fields([{ name: "img", maxCount: 5 }]), async (req, res) => {
     try {
-      
+
         const files = req.files;
         const productData = req.body;
         const updateObjectResult = await updateProductv2Handler({ objectId: req.params.id, updateObject: { ...productData, files } });
         res.status(responseStatus.STATUS_SUCCESS_OK);
         res.send({
-          status: responseData.SUCCESS,
-          data: {
-            product: updateObjectResult ? updateObjectResult : {}
-          }
+            status: responseData.SUCCESS,
+            data: {
+                product: updateObjectResult ? updateObjectResult : {}
+            }
         });
-      }
-     catch (err) {
-      console.log(err);
-      res.status(responseStatus.INTERNAL_SERVER_ERROR);
-      res.send({
-        status: responseData.ERROR,
-        data: { message: err }
-      });
     }
-  });
+    catch (err) {
+        console.log(err);
+        res.status(responseStatus.INTERNAL_SERVER_ERROR);
+        res.send({
+            status: responseData.ERROR,
+            data: { message: err }
+        });
+    }
+});
 router.route('/:id/product-update').post(async (req, res) => {
     try {
         if (!_.isEmpty(req.body)) {

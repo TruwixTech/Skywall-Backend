@@ -108,20 +108,20 @@ export async function updateCartQuantityHandler(input) {
     const { objectId, updateObject } = input;
 
     if (!updateObject.productId || updateObject.quantity === undefined) {
-      throw new Error("Product ID and quantity are required");
+      throw "Product ID and quantity are required"
     }
 
     // Get the existing cart
     const cart = await cartHelper.getObjectByQuery({ query: { _id: objectId } });
 
     if (!cart) {
-      throw new Error("Cart not found");
+      throw "Cart not found"
     }
 
     // Find the item in the cart and update its quantity
     const itemIndex = cart.items.findIndex(item => item.product.toString() === updateObject.productId);
     if (itemIndex === -1) {
-      throw new Error("Product not found in cart");
+      throw "Product not found in cart"
     }
 
     cart.items[itemIndex].quantity = updateObject.quantity;

@@ -52,13 +52,13 @@ router.route('/contact-us').post(async (req, res) => {
                 data: { send_mail }
             });
         } else {
-            throw new Error("Failed Sending Contact-Us Mail");
+            throw "Failed Sending Contact-Us Mail"
         }
     } catch (err) {
         console.error("Error in router:", err);
         res.status(responseStatus.INTERNAL_SERVER_ERROR).json({
             status: responseData.ERROR,
-            data: { message: err.message }
+            data: { message: err.message || err}
         });
     }
 });

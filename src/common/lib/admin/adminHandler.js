@@ -51,7 +51,7 @@ export async function contactusHandler(input) {
       };
       
       await mailsend_contact_details(mailInput);
-      return { success: true, message: 'Contact Us Mail Sent successfully' };
+      return {message: "Contact Us Mail Sent successfully"}
       
   } catch (error) {
       console.error("Error in contactusHandler:", error);
