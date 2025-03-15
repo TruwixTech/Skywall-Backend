@@ -92,8 +92,6 @@ export async function verifyPayment(orderData) {
                 // also add expected delivery later
             }
 
-            console.log(products)
-
             // Reduce stock for each product
             for (const item of products) {
                 await productHelper.directUpdateObject(
