@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const wholesaleProductsSchema = new Schema({
-    product: { type: mongoose.Schema.Types.ObjectId, ref: "Product", required: true },
+    product_id: { type: mongoose.Schema.Types.ObjectId, ref: "Product", required: true },
     priceBreaks: [
         {
             minQuantity: { type: Number, required: true }, 

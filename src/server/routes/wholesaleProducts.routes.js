@@ -37,7 +37,7 @@ router.route('/list').post(async (req, res) => {
         filter.populatedQuery = [
             {
                 model: "Product",
-                path: "product",
+                path: "product_id",
                 select: {},
             },
         ];
