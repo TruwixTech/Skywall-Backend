@@ -92,13 +92,15 @@ export async function verifyPayment(orderData) {
                 // also add expected delivery later
             }
 
-            // // ✅ Reduce stock for each product
-            // for (const item of products) {
-            //     await productHelper.updateObjectByQuery(
-            //         { _id: item.product_id }, // Query to find the product
-            //         { $inc: { stock: -item.quantity } } // Subtract quantity from stock
-            //     );
-            // }
+            console.log(products)
+
+            // Reduce stock for each product
+            for (const item of products) {
+                await productHelper.directUpdateObject(
+                    { _id: item.product_id }, // Query to find the product
+                    { $inc: { stock: -item.quantity } } // Subtract quantity from stock
+                );
+            }
 
             const order = await orderHelper.addObject(data)
 
