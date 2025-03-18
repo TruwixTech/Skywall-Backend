@@ -19,6 +19,7 @@ import paymentRoutes from './routes/payment.routes.js';
 import reviewRoutes from './routes/review.routes.js';
 import complaintRoutes from './routes/complaint.routes.js';
 import wholesaleRoutes from './routes/wholesaleProducts.routes.js';
+import wholesaleOrdersRoutes from './routes/wholesalebulkOrders.routes.js';
 
 import config from './config.js';
 import http from 'http';
@@ -94,6 +95,7 @@ app.use('/api/v1/payment',paymentRoutes);
 app.use('/api/v1/review',reviewRoutes);
 app.use('/api/v1/complaint',complaintRoutes);
 app.use('/api/v1/wholesale',wholesaleRoutes);
+app.use('/api/v1/wholesale/orders',wholesaleOrdersRoutes);
 
 app.use(
   '/api-docs',
