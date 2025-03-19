@@ -12,7 +12,13 @@ export async function adminSignupHandler(input) {
     query: { email: input.email },
   });
   if (existingAdmin) {
-    throw new Error("Admin with this email already exists");
+    throw "Admin with this email already exists";
+  }
+  const existingAdminphone = await adminHelper.getObjectByQuery({
+    query: { phone: input.phone },
+  });
+  if (existingAdminphone) {
+    throw "Admin with this phone number already exists";
   }
 
   const hashedPassword = await bcrypt.hash(input.password, 10);
@@ -83,11 +89,11 @@ export async function adminLoginHandler(input) {
   
 
   if (!admin) {
-    throw new Error("Admin not found");
+    throw "Admin with this email not exists";
   }
   const isMatch = await bcrypt.compare(input.password, admin.password);
   if (!isMatch) {
-    throw new Error("Invalid credentials");
+    throw "Invalid credentials.";
   }
 
   const token = generateToken(admin._id, ADMIN);
