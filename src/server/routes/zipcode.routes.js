@@ -6,6 +6,7 @@ import {
     addNewZipcodeHandler,
     deleteZipcodeHandler,
     getZipcodeDetailsHandler,
+    getZipcodeHandler,
     getZipcodeListHandler,
     updateZipcodeDetailsHandler
 } from '../../common/lib/zipcode/zipcodeHandler';
@@ -59,6 +60,29 @@ router.route('/new').post(protectRoutes.verifyAdmin, async (req, res) => {
     try {
         if (!_.isEmpty(req.body)) {
             const outputResult = await addNewZipcodeHandler(req.body);
+            res.status(responseStatus.STATUS_SUCCESS_OK);
+            res.send({
+                status: responseData.SUCCESS,
+                data: {
+                    zipcode: outputResult ? outputResult : {}
+                }
+            });
+        } else {
+            throw 'no request body sent'
+        }
+    } catch (err) {
+        console.log(err)
+        res.status(responseStatus.INTERNAL_SERVER_ERROR);
+        res.send({
+            status: responseData.ERROR,
+            data: { message: err }
+        });
+    }
+});
+router.route('/get-data').post(async (req, res) => {
+    try {
+        if (!_.isEmpty(req.body)) {
+            const outputResult = await getZipcodeHandler(req.body);
             res.status(responseStatus.STATUS_SUCCESS_OK);
             res.send({
                 status: responseData.SUCCESS,
