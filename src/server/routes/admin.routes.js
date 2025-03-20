@@ -38,7 +38,7 @@ router.route('/signup').post(async (req, res) => {
         res.status(responseStatus.INTERNAL_SERVER_ERROR);
         res.send({
             status: responseData.ERROR,
-            data: { message: err.message }
+            data: { message: err }
         });
     }
 });
