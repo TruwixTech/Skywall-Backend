@@ -22,7 +22,7 @@ export async function getOrderListHandler(input) {
             // Fetch zipcode details for each order's pincode
             const zipcodeData = await zipcodeHelper.getObjectByQuery({
                 query: { zipcode: order.pincode },
-                selectFrom: "facilityState returnCenter originCenter dispatchCenter"
+                selectFrom: "facilityState returnCenter originCenter dispatchCenter facilityCity"
             });
 
             // If zipcode data is found, add the fields to the order
@@ -31,12 +31,14 @@ export async function getOrderListHandler(input) {
                 order.returnCenter = zipcodeData.returnCenter;
                 order.originCenter = zipcodeData.originCenter;
                 order.dispatchCenter = zipcodeData.dispatchCenter;
+                order.facilityCity = zipcodeData.facilityCity;
             } else {
                 // Assign null if no matching zipcode data is found
                 order.facilityState = null;
                 order.returnCenter = null;
                 order.originCenter = null;
                 order.dispatchCenter = null;
+                order.facilityCity = null;
             }
         }
     }
