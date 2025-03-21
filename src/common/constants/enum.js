@@ -13,6 +13,10 @@ export const IN_PROGRESS = "In_progress";
 export const PRODUCT = "Product";
 export const BUSINESS = "Business";
 export const ORDER = "Order";
+export const PAYMENT = "Payment";
+
+export const PAID = "Paid";
+export const UNPAID = "Unpaid";
 
 export const PAY_ONLINE = "Pay_online";
 export const CASH_ON_DELIVERY = "Cash_on_delivery"; 

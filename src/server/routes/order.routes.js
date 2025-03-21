@@ -40,6 +40,11 @@ router.route('/list').post(async (req, res) => {
                 path: "products.product_id",
                 select: {},
             },
+            {
+                model: "User",
+                path: "user_id",
+                select: {},
+            },
         ];
 
         const outputResult = await getOrderListHandler(filter);
