@@ -8,13 +8,16 @@ import {
     PAYMENT_FAILED,
     INR,
     PAY_ONLINE,
-    CASH_ON_DELIVERY
+    CASH_ON_DELIVERY,
+    PAYMENT,
+    ORDER,
+    PAYMENT_REFUNDED
 } from "../constants/enum";
 
 const paymentSchema = new Schema({
     orderId: {
         type: Schema.Types.ObjectId,
-        ref: 'Order',
+        ref: ORDER,
         required: true,
     },
     amount: {
@@ -32,7 +35,7 @@ const paymentSchema = new Schema({
     },
     status: {
         type: String,
-        enum: [PAYMENT_PENDING, PAYMENT_COMPLETED, PAYMENT_FAILED],
+        enum: [PAYMENT_PENDING, PAYMENT_COMPLETED, PAYMENT_FAILED, PAYMENT_REFUNDED],
         default: PAYMENT_PENDING,
     },
     userId: {
@@ -56,4 +59,4 @@ const paymentSchema = new Schema({
 
 paymentSchema.set('versionKey', false);
 
-export default mongoose.model('Payment', paymentSchema);
+export default mongoose.model(PAYMENT, paymentSchema);

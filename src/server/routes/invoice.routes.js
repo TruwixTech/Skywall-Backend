@@ -3,15 +3,15 @@ import _ from 'lodash';
 import { Router } from 'express';
 
 import {
-    addNewOrderHandler,
-    deleteOrderHandler,
-    getOrderDetailsHandler,
-    getOrderListHandler,
-    updateOrderDetailsHandler
-} from '../../common/lib/order/orderHandler';
+    addNewInvoiceHandler,
+    deleteInvoiceHandler,
+    downloadInvoiceHanlder,
+    getInvoiceDetailsHandler,
+    getInvoiceListHandler,
+    updateInvoiceDetailsHandler
+} from '../../common/lib/invoice/invoiceHandler';
 import responseStatus from "../../common/constants/responseStatus.json";
 import responseData from "../../common/constants/responseData.json";
-import protectRoutes from "../../common/util/protectRoutes";
 
 const router = new Router();
 
@@ -36,24 +36,29 @@ router.route('/list').post(async (req, res) => {
         filter.query = { ...filter.query };
         filter.populatedQuery = [
             {
-                model: "Product",
-                path: "products.product_id",
+                model: "Order",
+                path: "order_Id",
                 select: {},
             },
             {
                 model: "User",
-                path: "user_id",
+                path: "user_Id",
+                select: {},
+            },
+            {
+                model: "Product",
+                path: "items.product",
                 select: {},
             },
         ];
 
-        const outputResult = await getOrderListHandler(filter);
+        const outputResult = await getInvoiceListHandler(filter);
         res.status(responseStatus.STATUS_SUCCESS_OK);
         res.send({
             status: responseData.SUCCESS,
             data: {
-                orderList: outputResult.list ? outputResult.list : [],
-                orderCount: outputResult.count ? outputResult.count : 0,
+                invoiceList: outputResult.list ? outputResult.list : [],
+                invoiceCount: outputResult.count ? outputResult.count : 0,
             },
         });
     } catch (err) {
@@ -70,12 +75,12 @@ router.route('/list').post(async (req, res) => {
 router.route('/new').post(async (req, res) => {
     try {
         if (!_.isEmpty(req.body)) {
-            const outputResult = await addNewOrderHandler(req.body.order);
+            const outputResult = await addNewInvoiceHandler(req.body.invoice);
             res.status(responseStatus.STATUS_SUCCESS_OK);
             res.send({
                 status: responseData.SUCCESS,
                 data: {
-                    order: outputResult ? outputResult : {}
+                    invoice: outputResult ? outputResult : {}
                 }
             });
         } else {
@@ -94,12 +99,12 @@ router.route('/new').post(async (req, res) => {
 router.route('/:id').get(async (req, res) => {
     try {
         if (req.params.id) {
-            const gotOrder = await getOrderDetailsHandler(req.params);
+            const gotInvoice = await getInvoiceDetailsHandler(req.params);
             res.status(responseStatus.STATUS_SUCCESS_OK);
             res.send({
                 status: responseData.SUCCESS,
                 data: {
-                    order: gotOrder ? gotOrder : {}
+                    invoice: gotInvoice ? gotInvoice : {}
                 }
             });
         } else {
@@ -115,19 +120,19 @@ router.route('/:id').get(async (req, res) => {
     }
 });
 
-router.route('/:id/update').post( async (req, res) => {
+router.route('/:id/update').post(async (req, res) => {
     try {
-        if (!_.isEmpty(req.params.id) && !_.isEmpty(req.body)) {
+        if (!_.isEmpty(req.params.id) && !_.isEmpty(req.body) && !_.isEmpty(req.body.invoice)) {
             let input = {
                 objectId: req.params.id,
-                updateObject: req.body
+                updateObject: req.body.invoice
             }
-            const updateObjectResult = await updateOrderDetailsHandler(input);
+            const updateObjectResult = await updateInvoiceDetailsHandler(input);
             res.status(responseStatus.STATUS_SUCCESS_OK);
             res.send({
                 status: responseData.SUCCESS,
                 data: {
-                    order: updateObjectResult ? updateObjectResult : {}
+                    invoice: updateObjectResult ? updateObjectResult : {}
                 }
             });
         } else {
@@ -143,15 +148,36 @@ router.route('/:id/update').post( async (req, res) => {
     }
 });
 
+router.route('/:id/download-invoice').post(async (req, res) => {
+    try {
+        if (!_.isEmpty(req.params.id)) {
+            let input = {
+                objectId: req.params.id,
+            }
+            await downloadInvoiceHanlder(input, res);
+        } else {
+            throw 'no body or id param sent'
+        }
+    } catch (err) {
+        console.log(err)
+        res.status(responseStatus.INTERNAL_SERVER_ERROR);
+        res.send({
+            status: responseData.ERROR,
+            data: { message: err }
+        });
+    }
+});
+
+
 router.route('/:id/remove').post(async (req, res) => {
     try {
         if (req.params.id) {
-            const deletedOrder = await deleteOrderHandler(req.params.id);
+            const deletedInvoice = await deleteInvoiceHandler(req.params.id);
             res.status(responseStatus.STATUS_SUCCESS_OK);
             res.send({
                 status: responseData.SUCCESS,
                 data: {
-                    hasOrderDeleted: true
+                    hasInvoiceDeleted: true
                 }
             });
         } else {
