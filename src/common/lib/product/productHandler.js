@@ -8,7 +8,7 @@ export async function addNewProductHandler(input) {
 
 function calculateDiscountedPrice(price, discountPercentage) {
   if (price < 0 || discountPercentage < 0 || discountPercentage > 100) {
-    throw new Error("Invalid price or discount percentage");
+    throw "Invalid price or discount percentage"
   }
 
   const discountAmount = (price * discountPercentage) / 100;
@@ -105,11 +105,11 @@ export async function addNewProductHandlerV2(input) {
 export async function updateWarrantyPriceHandler(productId, input_Warranty_months) {
   const product = await productHelper.getObjectById(productId);
   if (!product) {
-    throw new Error("Product not found");
+    throw "Product not found"
   }
   const warrantyPricing = product.warranty_pricing[input_Warranty_months.toString()];
   if (!warrantyPricing) {
-    throw new Error("Invalid warranty months");
+    throw "Invalid warranty months"
   }
   const newPrice = product.price + warrantyPricing;
   const new_Warranty_months = product.warranty_months + input_Warranty_months;
@@ -138,7 +138,7 @@ export async function updateProductv2Handler(input) {
   const existingProduct = await productHelper.getObjectById(filters);
 
   if (!existingProduct) {
-    throw new Error("Product not found");
+    throw "Product not found"
   }
   
   // Handle specificationSchema

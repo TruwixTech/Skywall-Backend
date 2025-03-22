@@ -4,12 +4,13 @@ import {
   userSignupHandler,
   userLoginHandler,
   verifyUserOtpHandler,
-  getUserByEmailHandler
+  getUserByEmailHandler,
+  changeUserPasswordHandler
 } from "../../common/lib/auth/authHandler";
 import responseStatus from "../../common/constants/responseStatus.json";
 import responseData from "../../common/constants/responseData.json";
-import {generateOtp,generateOtpExpireDate, mailsender} from "../../common/util/utilHelper";
-import {updateUserOtpHandler} from "../../common/lib/user/userHandler";
+import { generateOtp, generateOtpExpireDate, mailsender } from "../../common/util/utilHelper";
+import { updateUserOtpHandler } from "../../common/lib/user/userHandler";
 
 const router = new Router();
 
@@ -45,41 +46,61 @@ router.route("/login").post(async (req, res) => {
   }
 });
 
+router.route('/change-password').post(async (req, res) => {
+  try {
+    await changeUserPasswordHandler(req.body);
+    res.status(responseStatus.STATUS_SUCCESS_OK);
+    res.send({
+      status: responseData.SUCCESS,
+      data: {
+        message: 'Password updated successfully',
+      }
+    });
+  } catch (err) {
+    logger.error(err);
+    res.status(responseStatus.INTERNAL_SERVER_ERROR);
+    res.send({
+      status: responseData.ERROR,
+      data: { message: err.message }
+    });
+  }
+});
+
 router.route("/test-mail").post(async (req, res) => {
-  try {        
-    const { email} = req.body;
+  try {
+    const { email } = req.body;
     if (!email) {
-        throw 'Email is required';
+      throw 'Email is required';
     }
-    const gotUser = await getUserByEmailHandler({ email});
-    
+    const gotUser = await getUserByEmailHandler({ email });
+
     if (!gotUser) {
-        return res.status(responseStatus.STATUS_UNAUTHORIZED).send({
-            status: responseData.ERROR,
-            data: { message: 'Invalid email or password' }
-        });
+      return res.status(responseStatus.STATUS_UNAUTHORIZED).send({
+        status: responseData.ERROR,
+        data: { message: 'Invalid email or password' }
+      });
     }
     const otp = generateOtp(6);
     const expiry = generateOtpExpireDate();
-    
+
     await updateUserOtpHandler(gotUser._id, otp, expiry);
-    
+
     // Send OTP email
-    await mailsender(gotUser.name, gotUser.email,otp);
-    
+    await mailsender(gotUser.name, gotUser.email, otp);
+
     res.status(responseStatus.STATUS_SUCCESS_OK).send({
-        status: responseData.SUCCESS,
-        data: { user: gotUser }
+      status: responseData.SUCCESS,
+      data: { user: gotUser }
     });
-}
-catch(err){
+  }
+  catch (err) {
     console.log(err)
     res.status(responseStatus.INTERNAL_SERVER_ERROR);
     res.send({
-        status: responseData.ERROR,
-        data: { message: err }
+      status: responseData.ERROR,
+      data: { message: err }
     });
-}
+  }
 });
 
 router.route("/verify-email-otp").post(async (req, res) => {
