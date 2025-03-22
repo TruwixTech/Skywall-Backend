@@ -21,6 +21,8 @@ import complaintRoutes from './routes/complaint.routes.js';
 import wholesaleRoutes from './routes/wholesaleProducts.routes.js';
 import wholesaleOrdersRoutes from './routes/wholesalebulkOrders.routes.js';
 import zipcodeRoutes from './routes/zipcode.routes.js';
+import invoiceRoutes from './routes/invoice.routes.js';
+import returnRequestRoutes from './routes/returnRequest.routes.js';
 
 import config from './config.js';
 import http from 'http';
@@ -98,6 +100,8 @@ app.use('/api/v1/complaint',complaintRoutes);
 app.use('/api/v1/wholesale',wholesaleRoutes);
 app.use('/api/v1/wholesale/orders',wholesaleOrdersRoutes);
 app.use('/api/v1/zipcode',zipcodeRoutes);
+app.use('/api/v1/invoice',invoiceRoutes);
+app.use('/api/v1/returnRequest',returnRequestRoutes);
 
 app.use(
   '/api-docs',

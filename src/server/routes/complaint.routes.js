@@ -34,6 +34,13 @@ router.route('/list').post(async (req, res) => {
         }
 
         filter.query = { ...filter.query };
+        filter.populatedQuery = [
+            {
+                model: "User",
+                path: "userId",
+                select: {},
+            },
+        ];
 
         const outputResult = await getComplaintListHandler(filter);
         res.status(responseStatus.STATUS_SUCCESS_OK);
