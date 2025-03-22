@@ -15,8 +15,37 @@ import {
     sendVerificationEmail,
     verifyEmailOTP,
   } from "../../common/util/utilHelper";
+import { getUserByEmailHandler } from '../../common/lib/auth/authHandler';
 
 const router = new Router();
+
+router.route("/send-email-otp-forgot-password").post(async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      throw "Email is required";
+    }
+
+    const user = await getUserByEmailHandler({ email });
+
+    if (!user) {
+      throw "User not found";
+    }
+
+    await sendVerificationEmail(email, "Email Verification OTP");
+
+    res.status(responseStatus.STATUS_SUCCESS_OK).json({
+      status: responseData.SUCCESS,
+      message: "OTP sent successfully",
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(responseStatus.INTERNAL_SERVER_ERROR).json({
+      status: responseData.ERROR,
+      message: err.message || err,
+    });
+  }
+});
 
 router.route("/send-email-otp").post(async (req, res) => {
     try {
