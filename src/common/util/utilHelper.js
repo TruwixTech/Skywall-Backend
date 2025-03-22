@@ -321,14 +321,12 @@ export async function sendInvoiceEmail(userEmail, invoice) {
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log(`Invoice email sent to ${userEmail}`);
   } catch (error) {
     console.error("Error sending invoice email:", error);
   } finally {
     try {
       if (fs.existsSync(pdfPath)) {
         fs.unlinkSync(pdfPath);
-        console.log(`Deleted invoice file: ${pdfPath}`);
       }
     } catch (deleteError) {
       console.error("Error deleting invoice file:", deleteError);

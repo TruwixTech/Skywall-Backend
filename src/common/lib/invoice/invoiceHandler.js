@@ -30,7 +30,7 @@ export async function getInvoiceByQueryHandler(input) {
 }
 
 
-export async function downloadInvoiceHanlder(input) {
+export async function downloadInvoiceHanlder(input, res) {
     try {
         const id = input.objectId;
         const populatedQuery = {
@@ -123,10 +123,25 @@ export async function downloadInvoiceHanlder(input) {
         doc.fontSize(10).text("Skywall © 2025", { align: "center" });
         
         doc.end();
-        
-        return pdfPath; // Return the file path of the generated PDF
+
+        // Wait for PDF file creation
+        writeStream.on("finish", () => {
+            res.download(pdfPath, `invoice_${invoice.invoiceNumber}.pdf`, (err) => {
+                if (err) {
+                    console.error("Error sending file:", err);
+                    res.status(500).send({ status: "Error", message: "Failed to download invoice" });
+                }
+
+                // Delete the PDF after sending
+                fs.unlink(pdfPath, (unlinkErr) => {
+                    if (unlinkErr) {
+                        console.error("Failed to delete invoice:", unlinkErr);
+                    }
+                });
+            });
+        });
     } catch (error) {
         console.error("Error generating invoice PDF:", error);
-        throw "Failed to generate invoice"
+        res.status(500).send({ status: "Error", message: "Failed to generate invoice" });
     }
 }
