@@ -42,7 +42,7 @@ export async function downloadInvoiceHanlder(input, res) {
 
         const invoice = await invoiceHelper.getObjectById(populatedQuery);
         if (!invoice) {
-            throw new Error("Invoice not found");
+            throw "Invoice not found"
         }
 
         const pdfPath = path.join(__dirname, `invoice_${invoice.invoiceNumber}.pdf`);

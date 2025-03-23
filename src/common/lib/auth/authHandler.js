@@ -14,8 +14,8 @@ import {
 
 
 export async function userSignupHandler(input) {
-  
-  
+
+
   // Hash the provided password.
   const hashedPassword = await bcrypt.hash(input.password, 10);
 
@@ -52,15 +52,15 @@ export async function userLoginHandler(input) {
   }
 
   if (!user) {
-    throw new Error("User not found");
+    throw "User not found"
   }
 
   const isMatch = await bcrypt.compare(input.password, user.password);
   if (!isMatch) {
-    throw new Error("Invalid credentials");
+    throw "Invalid credentials"
   }
 
-  const token = generateToken(user._id, "user");
+  const token = generateToken(user._id, "User");
 
   return { user: getUserInfo(user), token };
 }
@@ -86,11 +86,11 @@ export async function updateUserOtpHandler(userId, otp, expiry) {
   }
 }
 
-export async function changeUserPasswordHandler(objectId, email, newPassword) {
+export async function changeUserPasswordHandler(input) {
   try {
     // Fetch the user by objectId and email
     const user = await userHelper.getObjectByQuery({
-      query: { _id: objectId, email: email },
+      query: { email: input.email },
       selectFrom: {}, // You can specify fields to select if needed
     });
 
@@ -98,9 +98,10 @@ export async function changeUserPasswordHandler(objectId, email, newPassword) {
       throw "User not found or email does not match";
     }
 
+    const hashedPassword = await bcrypt.hash(input.newPassword, 10);
     // Update the user's password
-    const updatedUser = await userHelper.directUpdateObject(objectId, {
-      password: newPassword,
+    const updatedUser = await userHelper.directUpdateObject(user._id, {
+      password: hashedPassword,
     });
 
     return updatedUser;
@@ -193,7 +194,7 @@ export async function getUserByEmailHandler(input) {
 
     const filters = {
       query: { email: input.email },
-      selectFrom: { name: 1, email: 1},
+      selectFrom: { name: 1, email: 1 },
     };
 
     const user = await userHelper.getObjectByQuery(filters);
