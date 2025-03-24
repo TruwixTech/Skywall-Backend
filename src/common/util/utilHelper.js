@@ -204,7 +204,7 @@ export async function mailsend_contact_details(input) {
 
 
 export async function sendInvoiceEmail(userEmail, invoice) {
-  const pdfPath = path.join(__dirname, `invoice_${invoice.invoiceNumber}.pdf`);
+  const pdfPath = path.join("/tmp", `invoice_${invoice.invoiceNumber}.pdf`);
   const doc = new PDFDocument({ margin: 50 });
   const writeStream = fs.createWriteStream(pdfPath);
   doc.pipe(writeStream);
