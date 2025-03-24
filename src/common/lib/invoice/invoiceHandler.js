@@ -45,7 +45,7 @@ export async function downloadInvoiceHanlder(input, res) {
             throw "Invoice not found"
         }
 
-        const pdfPath = path.join(__dirname, `invoice_${invoice.invoiceNumber}.pdf`);
+        const pdfPath = path.join("/tmp", `invoice_${invoice.invoiceNumber}.pdf`);
         const doc = new PDFDocument({ margin: 50 });
         const writeStream = fs.createWriteStream(pdfPath);
         doc.pipe(writeStream);
