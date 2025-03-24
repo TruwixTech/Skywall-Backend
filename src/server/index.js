@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import chalk from "./chalk";
+import cors from 'cors';
 
 import userRoutes from './routes/user.routes.js';
 import productRoutes from './routes/product.routes.js';
@@ -59,11 +60,31 @@ app.use(bodyParser.urlencoded({ limit: '100mb', extended: false }));
 app.use(cookieParser());
 app.enable('trust proxy');
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://localhost:5175",
+  "https://skywall-frontend.vercel.app",
+  "https://skywall-backend.vercel.app"
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) === -1) {
+        return callback(new Error("Not allowed by CORS"), false);
+      }
+      return callback(null, true);
+    },
+    credentials: true,
+  })
+);
+
 app.use('*', (req, res, next) => {
   const { hostname, originalUrl, protocol, method } = req;
   console.log(
-    `${
-      method === 'GET' ? chalk.getReq(method) : chalk.postReq(method)
+    `${method === 'GET' ? chalk.getReq(method) : chalk.postReq(method)
     }  ${protocol}://${hostname}:${config.PORT}${originalUrl}`
   );
   next();
@@ -94,14 +115,14 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/coupon', couponRoutes);
 app.use('/api/v1/otp', otpRoutes);
 app.use('/api/v1/cart', cartRoutes);
-app.use('/api/v1/payment',paymentRoutes);
-app.use('/api/v1/review',reviewRoutes);
-app.use('/api/v1/complaint',complaintRoutes);
-app.use('/api/v1/wholesale',wholesaleRoutes);
-app.use('/api/v1/wholesale/orders',wholesaleOrdersRoutes);
-app.use('/api/v1/zipcode',zipcodeRoutes);
-app.use('/api/v1/invoice',invoiceRoutes);
-app.use('/api/v1/returnRequest',returnRequestRoutes);
+app.use('/api/v1/payment', paymentRoutes);
+app.use('/api/v1/review', reviewRoutes);
+app.use('/api/v1/complaint', complaintRoutes);
+app.use('/api/v1/wholesale', wholesaleRoutes);
+app.use('/api/v1/wholesale/orders', wholesaleOrdersRoutes);
+app.use('/api/v1/zipcode', zipcodeRoutes);
+app.use('/api/v1/invoice', invoiceRoutes);
+app.use('/api/v1/returnRequest', returnRequestRoutes);
 
 app.use(
   '/api-docs',
