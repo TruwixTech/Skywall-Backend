@@ -72,8 +72,8 @@ export async function downloadInvoiceHanlder(input, res) {
             { title: "Item", x: 50, width: 150 },
             { title: "Quantity", x: 200, width: 50 },
             { title: "Warranty Expiry", x: 250, width: 100 },
-            { title: "Extended", x: 350, width: 100 },
-            { title: "Total Warranty", x: 450, width: 50 },
+            { title: "Extended (Months)", x: 350, width: 100 },
+            { title: "Total Warranty (Months)", x: 450, width: 100 },
             { title: "Total", x: 500, width: 80, align: "right" }
         ];
         
