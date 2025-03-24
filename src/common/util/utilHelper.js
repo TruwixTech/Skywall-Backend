@@ -401,7 +401,7 @@ export async function sendVerificationEmail(email, subject) {
   }
 }
 
-export async function sendEmailNotification(email, subject, message) {
+export async function sendEmailForSubsribers(email, subject, message) {
   try {
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -413,8 +413,9 @@ export async function sendEmailNotification(email, subject, message) {
 
     const mailOptions = {
       from: configVariables.EMAIL_USER,
-      to: email,
+      to: configVariables.EMAIL_USER,
       subject,
+      replyTo: email,
       text: message,
     };
 
