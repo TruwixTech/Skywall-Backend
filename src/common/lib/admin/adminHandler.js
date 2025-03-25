@@ -96,7 +96,7 @@ export async function adminLoginHandler(input) {
     throw "Invalid credentials.";
   }
 
-  const token = generateToken(admin._id, ADMIN);
+  const token = generateToken(admin._id, admin.role);
   return { admin: getAdminInfo(admin), token };
 }
 
