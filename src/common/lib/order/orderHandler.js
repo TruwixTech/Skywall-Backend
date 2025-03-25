@@ -3,6 +3,8 @@ import orderHelper from '../../helpers/order.helper';
 import zipcodeHelper from '../../helpers/zipcode.helper';
 import { v4 as uuidv4 } from 'uuid';
 import { sendInvoiceEmail } from '../../util/utilHelper';
+import productHelper from '../../helpers/product.helper';
+import { CANCELLED, DELIVERED, RETURNED } from '../../constants/enum';
 
 export async function addNewOrderHandler(input) {
     return await orderHelper.addObject(input);
@@ -14,7 +16,7 @@ export async function getOrderDetailsHandler(input) {
 
 export async function updateOrderDetailsHandler(input) {
     const { status, order } = input.updateObject
-    if (input.updateObject.status === "Delivered") {
+    if (input.updateObject.status === DELIVERED) {
         const formattedProducts = order.products.map(product => ({
             product: product.product_id, // Assuming it's an ObjectId reference
             quantity: product.quantity,
@@ -43,6 +45,18 @@ export async function updateOrderDetailsHandler(input) {
 
         const populatedInvoice = await invoiceHelper.getObjectById(populatedQuery);
         await sendInvoiceEmail(populatedInvoice.user_Id.email, populatedInvoice);
+    }
+
+    // Handle Returned Status
+    if (input.updateObject.status === RETURNED || input.updateObject.status === CANCELLED) {
+        const productUpdates = order.products.map(product => ({
+            updateOne: {
+                filter: { _id: product.product_id },
+                update: { $inc: { stock: product.quantity } },
+            },
+        }));
+
+        await productHelper.bulkWrite(productUpdates);  
     }
 
     const updateObject2 = { status }
