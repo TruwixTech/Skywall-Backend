@@ -145,6 +145,72 @@ export async function mailsend_details(input) {
   }
 }
 
+export async function mailsend_details_bulkorder(input) {
+  try {
+    const { app_details, templateName, email, subject_input } = input;
+
+    let transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: configVariables.EMAIL_USER,
+        pass: configVariables.EMAIL_PASS,
+      },
+    });
+
+    transporter.use(
+      'compile',
+      hbs({
+        viewEngine: {
+          extName: '.handlebars',
+          partialsDir: path.join(__dirname, 'views/'),
+          defaultLayout: false,
+        },
+        viewPath: path.join(__dirname, 'views/'),
+        extName: '.handlebars',
+      })
+    );
+
+    const formattedProducts = app_details.products.map(product => ({
+      title: product.product_id?.name || 'Product',
+      category: product.product_id?.category || 'N/A',
+      quantity: product.quantity,
+      price: product.price,
+    }));
+
+    const formattedContext = {
+      orderNumber: app_details._id,
+      status: app_details.paymentStatus,
+      orderDate: new Date(app_details.created_at).toLocaleDateString(),
+      totalPrice: app_details.total_price,
+      name: `${app_details.shipping_address.firstName} ${app_details.shipping_address.lastName}`,
+      address: app_details.shipping_address.fullAddress,
+      city: app_details.shipping_address.city,
+      country: app_details.shipping_address.country,
+      state: app_details.shipping_address.state,
+      zipCode: app_details.shipping_address.zipCode,
+      companyName: app_details.companyName ? app_details.companyName : undefined,
+      gstNumber: app_details.gstNumber ? app_details.gstNumber : undefined,
+      products: formattedProducts,
+    };
+
+    let mailOptions = {
+      from: configVariables.EMAIL_USER,
+      to: email,
+      subject: subject_input,
+      text: subject_input,
+      template: templateName,
+      context: formattedContext,
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    return { success: true, messageId: info.messageId };
+  } catch (error) {
+    console.error('Error sending email:', error);
+    throw error;
+  }
+}
+
+
 export async function mailsend_contact_details(input) {
   try {
 

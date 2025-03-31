@@ -24,6 +24,7 @@ import wholesaleOrdersRoutes from './routes/wholesalebulkOrders.routes.js';
 import zipcodeRoutes from './routes/zipcode.routes.js';
 import invoiceRoutes from './routes/invoice.routes.js';
 import returnRequestRoutes from './routes/returnRequest.routes.js';
+import newsRoutes from './routes/news.routes.js';
 
 import config from './config.js';
 import http from 'http';
@@ -123,6 +124,7 @@ app.use('/api/v1/wholesale/orders', wholesaleOrdersRoutes);
 app.use('/api/v1/zipcode', zipcodeRoutes);
 app.use('/api/v1/invoice', invoiceRoutes);
 app.use('/api/v1/returnRequest', returnRequestRoutes);
+app.use('/api/v1/news', newsRoutes);
 
 app.use(
   '/api-docs',
