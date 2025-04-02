@@ -106,7 +106,7 @@ router.route('/warranty-extender/:id').post(async (req, res) => {
     }
 });
 
-router.post("/add-product", protectRoutes.verifyAdmin, upload.fields([{ name: "img", maxCount: 5 }]), async (req, res) => {
+router.post("/add-product", protectRoutes.verifyAdmin, upload.fields([{ name: "img"}]), async (req, res) => {
     try {
         const files = req.files;
         const productData = req.body;
@@ -175,7 +175,7 @@ router.route('/:id/update').post(protectRoutes.verifyAdmin, async (req, res) => 
     }
 });
 
-router.route('/:id/update/v2').post(protectRoutes.verifyAdmin, upload.fields([{ name: "img", maxCount: 5 }]), async (req, res) => {
+router.route('/:id/update/v2').post(protectRoutes.verifyAdmin, upload.fields([{ name: "img" }]), async (req, res) => {
     try {
 
         const files = req.files;
