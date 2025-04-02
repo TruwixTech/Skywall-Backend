@@ -205,12 +205,12 @@ export async function updateProductv2Handler(input) {
 
   // Handle new images
   let newImages = [];
-  if (input.files && input.files.img) {
-    newImages = input.files.img.map(file => ({ path: file.path }));
+  if (input.updateObject.files.img) {
+    newImages = input.updateObject.files.img.map(file => ({ path: file.path }));
   }
-
   // Upload new images to Cloudinary and merge with existing ones
   let imageUrls = [...existingImages];
+
   if (newImages.length > 0) {
     for (const image of newImages) {
       const result = await cloudinary.uploader.upload(image.path, {
@@ -222,6 +222,7 @@ export async function updateProductv2Handler(input) {
 
   // Update the product with the merged image list
   input.updateObject.image = imageUrls;
+
 
   // Calculate new price
   let new_price = calculateDiscountedPrice(input.updateObject.price, input.updateObject.discount_percentage);
