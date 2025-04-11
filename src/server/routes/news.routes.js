@@ -14,12 +14,14 @@ import {
 import responseStatus from "../../common/constants/responseStatus.json";
 import responseData from "../../common/constants/responseData.json";
 import protectRoutes from '../../common/util/protectRoutes';
-import { storage } from "../../util/cloudinary.js";
-import { v2 as cloudinary } from "cloudinary";
+import { upload_image } from '../../util/S3';
 
 const router = new Router();
 
-const upload = multer({ storage, limits: { fileSize: 500 * 1024 * 1024 } });
+const storage = multer.memoryStorage();
+const upload = multer({
+    storage: storage,
+});
 
 
 router.route('/list').post(async (req, res) => {
@@ -178,21 +180,11 @@ router.route('/:id/update-v2').post(protectRoutes.verifyAdmin, upload.fields([{ 
             existingImages = existingImages ? JSON.parse(existingImages) : [];
             imagesToDelete = imagesToDelete ? JSON.parse(imagesToDelete) : [];
 
-            if (imagesToDelete.length > 0) {
-                for (const imageUrl of imagesToDelete) {
-                    // Extract public_id from the image URL
-                    const publicId = imageUrl.split("/").pop().split(".")[0];
-                    await cloudinary.uploader.destroy(`news/${publicId}`);
-                }
-            }
-
             let newImageUrls = [];
             if (req.files && req.files.img) {
                 for (const image of req.files.img) {
-                    const result = await cloudinary.uploader.upload(image.path, {
-                        folder: "news",
-                    });
-                    newImageUrls.push(result.secure_url);
+                    const result = await upload_image(image, input.updateObject.title);
+                    newImageUrls.push(result.Location);
                 }
             }
 
