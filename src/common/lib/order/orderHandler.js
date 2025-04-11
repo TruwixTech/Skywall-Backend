@@ -49,14 +49,17 @@ export async function updateOrderDetailsHandler(input) {
 
     // Handle Returned Status
     if (input.updateObject.status === RETURNED || input.updateObject.status === CANCELLED) {
-        const productUpdates = order.products.map(product => ({
+        const productUpdates = order.products.map(product => (
+            console.log("product", product.product_id._id || product.product_id),
+            {
             updateOne: {
-                filter: { _id: product.product_id },
+                filter: { _id: product.product_id._id || product.product_id },
                 update: { $inc: { stock: product.quantity } },
             },
         }));
 
-        await productHelper.bulkWrite(productUpdates);  
+
+        await productHelper.bulkWrite(productUpdates);
     }
 
     const updateObject2 = { status }
