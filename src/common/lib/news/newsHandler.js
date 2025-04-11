@@ -1,4 +1,4 @@
-import { upload_image } from '../../../util/S3';
+import { upload_image } from '../../../util/s3';
 import newsHelper from '../../helpers/news.helper';;
 
 export async function addNewNewsHandler(input) {

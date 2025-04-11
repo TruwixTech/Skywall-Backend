@@ -15,7 +15,7 @@ import {
 import responseStatus from "../../common/constants/responseStatus.json";
 import responseData from "../../common/constants/responseData.json";
 import protectRoutes from "../../common/util/protectRoutes";
-import { upload_image } from '../../util/S3.js';
+import { upload_image } from '../../util/s3.js';
 import { setServerError, setSuccess } from '../../common/util/responseHelper.js';
 
 const storage = multer.memoryStorage();
