@@ -14,7 +14,7 @@ import {
 import responseStatus from "../../common/constants/responseStatus.json";
 import responseData from "../../common/constants/responseData.json";
 import protectRoutes from '../../common/util/protectRoutes';
-import { upload_image } from '../../util/S3';
+import { upload_image } from '../../util/s3';
 
 const router = new Router();
 
