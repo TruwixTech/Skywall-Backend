@@ -1,5 +1,5 @@
+import { upload_image } from "../../../util/S3";
 import productHelper from "../../helpers/product.helper";
-import { v2 as cloudinary } from "cloudinary";
 
 
 export async function addNewProductHandler(input) {
@@ -75,21 +75,18 @@ export async function addNewProductHandlerV2(input) {
     });
   }
 
-  // Add file paths to product data
-  if (input.files.img) {
-    input.images = input.files.img.map(file => ({ path: file.path }));
+  if(input.files.img.length === 0) {
+    throw "No images provided"
   }
 
   let imageUrls = [];
   let new_price = calculateDiscountedPrice(input.price, input.discount_percentage);
 
-  // Upload images to Cloudinary
-  if (input.images && input.images.length > 0) {
-    for (const image of input.images) {
-      const result = await cloudinary.uploader.upload(image.path, {
-        folder: "products",
-      });
-      imageUrls.push(result.secure_url);
+  // Upload images to S3 Bucket
+  if (input.files.img && input.files.img.length > 0) {
+    for (const image of input.files.img) {
+      const result = await upload_image(image, input.name);
+      imageUrls.push(result.Location);
     }
   }
 
@@ -206,17 +203,15 @@ export async function updateProductv2Handler(input) {
   // Handle new images
   let newImages = [];
   if (input.updateObject.files.img) {
-    newImages = input.updateObject.files.img.map(file => ({ path: file.path }));
+    newImages = input.updateObject.files.img;
   }
-  // Upload new images to Cloudinary and merge with existing ones
+  // Upload new images to S3 and merge with existing ones
   let imageUrls = [...existingImages];
 
   if (newImages.length > 0) {
     for (const image of newImages) {
-      const result = await cloudinary.uploader.upload(image.path, {
-        folder: "products",
-      });
-      imageUrls.push(result.secure_url);
+      const result = await upload_image(image, input.updateObject.name);
+      imageUrls.push(result.Location);
     }
   }
 

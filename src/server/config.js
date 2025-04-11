@@ -16,6 +16,10 @@ const configVariables = {
   EMAIL_USER_OTP: ``,
   EMAIL_PASS_OTP: ``,
   RAZORPAY_KEY_ID: 'rzp_test_m5TgogV8z5WjjW',
-  RAZORPAY_KEY_SECRET: 'PVA4mtD6aaULi7FnTPF8ZsNs'
+  RAZORPAY_KEY_SECRET: 'PVA4mtD6aaULi7FnTPF8ZsNs',
+  AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+  AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+  AWS_REGION: process.env.AWS_REGION,
+  AWS_BUCKET_NAME: process.env.AWS_BUCKET_NAME,
 };
 export default configVariables;

@@ -1,5 +1,5 @@
-import newsHelper from '../../helpers/news.helper';
-import { v2 as cloudinary } from "cloudinary";
+import { upload_image } from '../../../util/S3';
+import newsHelper from '../../helpers/news.helper';;
 
 export async function addNewNewsHandler(input) {
     return await newsHelper.addObject(input);
@@ -8,16 +8,14 @@ export async function addNewNewsHandler(input) {
 export async function addNewNewsHandlerV2(input) {
     let imageUrls = [];
 
-    // Upload images to Cloudinary
+    // Upload images to S3
     if (input.files && input.files.length > 0) {
         for (const image of input.files) {
             try {
-                const result = await cloudinary.uploader.upload(image.path, {
-                    folder: "news", // Store images in "news" folder on Cloudinary
-                });
-                imageUrls.push(result.secure_url);
+                const result = await upload_image(image, input.title);
+                imageUrls.push(result.Location);
             } catch (err) {
-                console.error("Cloudinary Upload Error:", err);
+                console.error("Image Upload Error:", err);
             }
         }
     }

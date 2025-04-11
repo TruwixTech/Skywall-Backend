@@ -15,11 +15,16 @@ import {
 import responseStatus from "../../common/constants/responseStatus.json";
 import responseData from "../../common/constants/responseData.json";
 import protectRoutes from "../../common/util/protectRoutes";
-import { storage } from "../../util/cloudinary.js";
+import { upload_image } from '../../util/S3.js';
+import { setServerError, setSuccess } from '../../common/util/responseHelper.js';
+
+const storage = multer.memoryStorage();
+const upload = multer({
+    storage: storage,
+});
 
 const router = new Router();
 
-const upload = multer({ storage, limits: { fileSize: 500 * 1024 * 1024 } });
 
 router.route('/list').post(async (req, res) => {
     try {
@@ -84,6 +89,21 @@ router.route('/new').post(protectRoutes.verifyAdmin, async (req, res) => {
     }
 });
 
+router.route('/upload-image').post(upload.single('img'), async (req, res) => {
+    try {
+        if (!_.isEmpty(req.file)) {
+            const imageUrl = await upload_image(req.file, 'skywall');
+
+            setSuccess(res, imageUrl.Location);
+        } else {
+            throw 'no request body sent'
+        }
+    } catch (err) {
+        console.log(err)
+        setServerError(res, err);
+    }
+});
+
 router.route('/warranty-extender/:id').post(async (req, res) => {
     try {
         const productId = req.params;
@@ -106,7 +126,7 @@ router.route('/warranty-extender/:id').post(async (req, res) => {
     }
 });
 
-router.post("/add-product", protectRoutes.verifyAdmin, upload.fields([{ name: "img"}]), async (req, res) => {
+router.post("/add-product", protectRoutes.verifyAdmin, upload.fields([{ name: "img" }]), async (req, res) => {
     try {
         const files = req.files;
         const productData = req.body;

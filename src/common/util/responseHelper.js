@@ -7,7 +7,6 @@ export function setSuccess(res, data) {
 }
 
 export function setServerError(res, data) {
-  console.log("Error", data);
   res.status(responseStatus.INTERNAL_SERVER_ERROR);
   res.json({ status: responseData.ERROR, data });
 }
